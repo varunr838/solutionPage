@@ -24,60 +24,15 @@ export const problemsData = {
     visualSteps: [
         {
           desc: "Initialize: We start with an empty hashmap and the input array.",
-          svg: (
-            <g>
-              {/* Array Display */}
-              <rect x="50" y="80" width="300" height="60" rx="8" fill="none" stroke="#3B82F6" strokeWidth="2" strokeDasharray="5,5" />
-              <text x="200" y="115" textAnchor="middle" fill="var(--text-primary)" fontSize="16" fontWeight="600">nums = [2, 7, 11, 15]</text>
-              
-              {/* Empty Hashmap Box */}
-              <rect x="450" y="80" width="200" height="150" rx="8" fill="#F1F5F9" stroke="#94A3B8" strokeWidth="1" />
-              <text x="550" y="110" textAnchor="middle" fill="#64748b" fontWeight="bold">Hash Map</text>
-              <text x="550" y="160" textAnchor="middle" fill="#94A3B8" fontSize="14">{"{ } (Empty)"}</text>
-            </g>
-          )
+          image: "/images/two-sum-step1.jpeg"
         },
         {
           desc: "Step 1: Check nums[0] (value 2). Complement 9 - 2 = 7 is NOT in map. Store {2: 0}.",
-          svg: (
-            <g>
-              {/* Highlight 2 in array */}
-              <rect x="65" y="90" width="40" height="40" rx="4" fill="#3B82F6" opacity="0.2" />
-              <text x="200" y="115" textAnchor="middle" fill="var(--text-primary)" fontSize="16">nums = [2, 7, 11, 15]</text>
-              
-              {/* Map showing insertion */}
-              <rect x="450" y="80" width="200" height="150" rx="8" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2" />
-              <text x="550" y="110" textAnchor="middle" fill="#1E3A8A" fontWeight="bold">Hash Map</text>
-              <text x="550" y="160" textAnchor="middle" fill="#1E3A8A" fontSize="16" fontWeight="bold">{"{ 2 : 0 }"}</text>
-              
-              {/* Arrow showing storage */}
-              <path d="M 100 130 Q 250 250 440 160" stroke="#3B82F6" strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
-            </g>
-          )
+          image: "/images/two-sum-step2.jpeg"
         },
         {
           desc: "Step 2: Check nums[1] (value 7). Complement 9 - 7 = 2 IS in map! Return [0, 1].",
-          svg: (
-            <g>
-              <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                  <polygon points="0 0, 10 3.5, 0 7" fill="#10B981" />
-                </marker>
-              </defs>
-              {/* Highlight 7 in array */}
-              <rect x="120" y="90" width="40" height="40" rx="4" fill="#10B981" opacity="0.2" />
-              <text x="200" y="115" textAnchor="middle" fill="var(--text-primary)" fontSize="16">nums = [2, 7, 11, 15]</text>
-              
-              {/* Map showing finding 2 */}
-              <rect x="450" y="80" width="200" height="150" rx="8" fill="#D1FAE5" stroke="#10B981" strokeWidth="3" />
-              <text x="550" y="110" textAnchor="middle" fill="#064E3B" fontWeight="bold">Match Found!</text>
-              <text x="550" y="160" textAnchor="middle" fill="#064E3B" fontSize="16" fontWeight="bold">{"{ 2 : 0 }"}</text>
-              
-              {/* Result Callout */}
-              <rect x="250" y="280" width="300" height="60" rx="30" fill="#10B981" />
-              <text x="400" y="318" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Result: [0, 1]</text>
-            </g>
-          )
+          image: "/images/two-sum-step3.jpeg"
         }
       ],
     mistakes : [
