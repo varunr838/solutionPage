@@ -991,4 +991,833 @@ export const problemsData = {
     { title: "Iterative preferred", text: "Iterative binary search avoids recursion overhead." }
   ]
 }
+   "validate-binary-search-tree": {
+        id: 98,
+        title: "Validate Binary Search Tree",
+        difficulty: "Medium",
+        acceptance: "32.6%",
+        submissions: "2.1M",
+        tags: ["Tree", "DFS", "BFS", "Binary Search Tree", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, determine if it is a valid binary search tree (BST).</p><p>A <strong>valid BST</strong> is defined as follows:</p><ul><li>The left subtree of a node contains only nodes with keys <strong>strictly less than</strong> the node's key.</li><li>The right subtree of a node contains only nodes with keys <strong>strictly greater than</strong> the node's key.</li><li>Both the left and right subtrees must also be binary search trees.</li></ul>",
+        intuition: [
+            {
+                title: "Global Constraints",
+                text: "Validating a BST is not just about comparing a node to its immediate children. A node must satisfy constraints imposed by *all* its ancestors."
+            },
+            {
+                title: "Range Propagation",
+                text: "We can define a valid range (low, high) for each node. As we traverse, we tighten these bounds. For the root, the range is (-∞, +∞). Moving left updates high, moving right updates low."
+            },
+            {
+                title: "Validity Check",
+                text: "At each node, we simply check if it falls strictly within the inherited range: low < node.val < high."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def isValidBST(self, root: Optional[TreeNode]) -> bool:\n        def validate(node, low=-float('inf'), high=float('inf')):\n            if not node:\n                return True\n            if not (low < node.val < high):\n                return False\n            return (validate(node.left, low, node.val) and\n                    validate(node.right, node.val, high))\n        \n        return validate(root)`,
+            java: `class Solution {\n    public boolean isValidBST(TreeNode root) {\n        return validate(root, null, null);\n    }\n    \n    private boolean validate(TreeNode node, Integer low, Integer high) {\n        if (node == null) return true;\n        \n        if ((low != null && node.val <= low) || \n            (high != null && node.val >= high)) {\n            return false;\n        }\n        \n        return validate(node.left, low, node.val) && \n               validate(node.right, node.val, high);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    bool isValidBST(TreeNode* root) {\n        return validate(root, LONG_MIN, LONG_MAX);\n    }\n    \n    bool validate(TreeNode* node, long low, long high) {\n        if (!node) return true;\n        if (node->val <= low || node->val >= high) return false;\n        return validate(node->left, low, node->val) && \n               validate(node->right, node->val, high);\n    }\n};`,
+            javascript: `/**\n * @param {TreeNode} root\n * @return {boolean}\n */\nvar isValidBST = function(root) {\n    const validate = (node, low, high) => {\n        if (!node) return true;\n        if ((low !== null && node.val <= low) || \n            (high !== null && node.val >= high)) {\n            return false;\n        }\n        return validate(node.left, low, node.val) && \n               validate(node.right, node.val, high);\n    };\n    return validate(root, null, null);\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "We visit every node exactly once to validate it against the range." },
+            space: { value: "O(H)", explanation: "H is the height of the tree. Used by the recursion stack." }
+        },
+        visualSteps: [
+            {
+                desc: "Step 1: Start Validation. Initial Range: (-∞, +∞)",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 1: Start Validation</text>
+                        <rect x="250" y="215" width="300" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="400" y="238" textAnchor="middle" fill="#1E3A8A" fontSize="12">Range: (-∞, +∞)</text>
+                        <line x1="400" y1="80" x2="250" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="80" x2="550" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="150" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="350" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="450" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="650" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="80" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="400" y="85" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                        <circle cx="250" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="250" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="550" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="150" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="150" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">null</text>
+                        <circle cx="350" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="350" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">null</text>
+                        <circle cx="450" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="450" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="650" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="650" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">8</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 2: Validate Root (5). 5 is within (-∞, +∞).",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 2: Validate Root (5)</text>
+                        <rect x="250" y="215" width="300" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="400" y="238" textAnchor="middle" fill="#1E3A8A" fontSize="12">Range: (-∞, +∞)</text>
+                        <line x1="400" y1="80" x2="250" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="80" x2="550" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="150" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="350" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="450" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="650" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="80" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="400" y="85" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                        <circle cx="250" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="250" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="550" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="450" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="450" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="650" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="650" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">8</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 3: Check Left (1). Max becomes 5. Range (-∞, 5). Valid.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 3: Validate Left Child (1)</text>
+                        <rect x="150" y="215" width="160" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="230" y="238" textAnchor="middle" fill="#1E3A8A" fontSize="12">Range: (-∞, 5)</text>
+                        <line x1="400" y1="80" x2="250" y2="180" stroke="#3B82F6" strokeWidth="3" />
+                        <line x1="400" y1="80" x2="550" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="150" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="180" x2="350" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="450" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="650" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="80" r="25" fill="#10B981" opacity="0.3" />
+                        <text x="400" y="85" textAnchor="middle" fill="#1E3A8A" fontWeight="600" opacity="1">5</text>
+                        <circle cx="250" cy="180" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="250" y="185" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="550" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="450" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="450" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="650" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="650" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">8</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 4: Check Right (7). Min becomes 5. Range (5, +∞). Valid.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 4: Validate Right Child (7)</text>
+                        <rect x="600" y="165" width="160" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="680" y="188" textAnchor="middle" fill="#1E3A8A" fontSize="12">Range: (5, +∞)</text>
+                        <line x1="400" y1="80" x2="550" y2="180" stroke="#3B82F6" strokeWidth="3" />
+                        <line x1="400" y1="80" x2="250" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="450" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="650" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="80" r="25" fill="#10B981" opacity="0.3" />
+                        <text x="400" y="85" textAnchor="middle" fill="#1E3A8A" fontWeight="600" opacity="1">5</text>
+                        <circle cx="250" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="250" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="180" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="550" y="185" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="450" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="450" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="650" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="650" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">8</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 5: Check Right->Left (3). Range (5, 7). 3 < 5! Invalid.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#EF4444" fontSize="14" fontWeight="700">Step 5: Violation! 3 is not {'>'} 5</text>
+                        <rect x="250" y="215" width="160" height="36" rx="4" fill="#FEE2E2" stroke="#EF4444" />
+                        <text x="330" y="238" textAnchor="middle" fill="#991B1B" fontSize="12">Range: (5, 7)</text>
+                        <line x1="400" y1="80" x2="550" y2="180" stroke="#3B82F6" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="450" y2="280" stroke="#EF4444" strokeWidth="3" />
+                        <line x1="400" y1="80" x2="250" y2="180" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="180" x2="650" y2="280" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="80" r="25" fill="#10B981" opacity="0.3" />
+                        <text x="400" y="85" textAnchor="middle" fill="#1E3A8A" fontWeight="600" opacity="1">5</text>
+                        <circle cx="550" cy="180" r="25" fill="#10B981" opacity="0.3" />
+                        <text x="550" y="185" textAnchor="middle" fill="#1E3A8A" fontWeight="600" opacity="1">7</text>
+                        <circle cx="250" cy="180" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="250" y="185" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="650" cy="280" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="650" y="285" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">8</text>
+                        <circle cx="450" cy="280" r="30" fill="#EF4444" stroke="#B91C1C" strokeWidth="4" />
+                        <text x="450" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <text x="450" y="330" textAnchor="middle" fill="#EF4444" fontWeight="600">3 {'<'} 5 (Invalid)</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            {
+                title: "Inorder Traversal",
+                text: "An inorder traversal of a valid BST yields a sorted sequence."
+            },
+            {
+                title: "Initial Range",
+                text: "Start with (-∞, +∞)."
+            },
+            {
+                title: "Integer Overflow",
+                text: "Be careful with INT_MIN/MAX."
+            },
+            {
+                title: "Iterative Solution",
+                text: "Use a Stack to simulate recursion."
+            }
+        ],
+        mistakes: [
+            {
+                title: "Local Check Only",
+                text: "Only checking left < root < right is insufficient."
+            },
+            {
+                title: "Handling Duplicates",
+                text: "BST definitions vary on equality."
+            },
+            {
+                title: "Binary Tree vs BST",
+                text: "Don't assume input is already a BST."
+            }
+        ],
+        related: []
+    },
+    "invert-binary-tree": {
+        id: 226,
+        title: "Invert Binary Tree",
+        difficulty: "Easy",
+        acceptance: "77.0%",
+        submissions: "2.5M",
+        tags: ["Tree", "DFS", "BFS", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, invert the tree, and return its root.</p>",
+        intuition: [
+            {
+                title: "Recursive Structure",
+                text: "A binary tree is defined recursively. The inversion operation is also recursive: the inverted tree is the root with its inverted left and right subtrees swapped."
+            },
+            {
+                title: "Base Case",
+                text: "If a node is null, there's nothing to invert. This is our recursion stopper."
+            },
+            {
+                title: "Swap Step",
+                text: "For any non-null node, we simply swap its left and right child pointers."
+            },
+            {
+                title: "Propagation",
+                text: "We repeat this process for all children, effectively mirroring the entire structure."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        if not root:\n            return None\n        root.left, root.right = root.right, root.left\n        self.invertTree(root.left)\n        self.invertTree(root.right)\n        return root`,
+            java: `class Solution {\n    public TreeNode invertTree(TreeNode root) {\n        if (root == null) {\n            return null;\n        }\n        TreeNode right = invertTree(root.right);\n        TreeNode left = invertTree(root.left);\n        root.left = right;\n        root.right = left;\n        return root;\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    TreeNode* invertTree(TreeNode* root) {\n        if (root == nullptr) {\n            return nullptr;\n        }\n        TreeNode* temp = root->left;\n        root->left = root->right;\n        root->right = temp;\n        invertTree(root->left);\n        invertTree(root->right);\n        return root;\n    }\n}`,
+            javascript: `/**\n * @param {TreeNode} root\n * @return {TreeNode}\n */\nvar invertTree = function(root) {\n    if (!root) return null;\n    let temp = root.left;\n    root.left = root.right;\n    root.right = temp;\n    invertTree(root.left);\n    invertTree(root.right);\n    return root;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "We visit each node exactly once to swap its children." },
+            space: { value: "O(N)", explanation: "Depth of recursion stack. O(N) worst case (skewed), O(log N) best case (balanced)." }
+        },
+        visualSteps: [
+            {
+                desc: "Step 1: Start at Root (4). Swap children 2 and 7.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Input: [4,2,7,1,3,6,9]</text>
+                        <line x1="400" y1="60" x2="250" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="130" x2="175" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="130" x2="325" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="550" y1="130" x2="475" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="550" y1="130" x2="625" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="250" cy="130" r="20" fill="#10B981" stroke="white" strokeWidth="2" />
+                        <text x="250" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="550" cy="130" r="20" fill="#F59E0B" stroke="white" strokeWidth="2" />
+                        <text x="550" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="175" cy="220" r="20" fill="#EF4444" stroke="white" strokeWidth="2" />
+                        <text x="175" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="325" cy="220" r="20" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                        <text x="325" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="475" cy="220" r="20" fill="#EC4899" stroke="white" strokeWidth="2" />
+                        <text x="475" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="625" cy="220" r="20" fill="#6366F1" stroke="white" strokeWidth="2" />
+                        <text x="625" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                        <text x="400" y="320" textAnchor="middle" fill="#6B7280" fontSize="16">Start at Root (4)</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 2: Recurse Left (now 7). Swap its children 6 and 9.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Processing Root (4)</text>
+                        <line x1="400" y1="60" x2="250" y2="130" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <line x1="400" y1="60" x2="550" y2="130" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <g opacity="0.8">
+                            <line x1="250" y1="130" x2="175" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                            <line x1="250" y1="130" x2="325" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                            <circle cx="250" cy="130" r="20" fill="#10B981" stroke="white" strokeWidth="2" />
+                            <text x="250" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                            <circle cx="175" cy="220" r="20" fill="#EF4444" stroke="white" strokeWidth="2" />
+                            <text x="175" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                            <circle cx="325" cy="220" r="20" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                            <text x="325" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        </g>
+                        <g opacity="0.8">
+                            <line x1="550" y1="130" x2="475" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                            <line x1="550" y1="130" x2="625" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                            <circle cx="550" cy="130" r="20" fill="#F59E0B" stroke="white" strokeWidth="2" />
+                            <text x="550" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                            <circle cx="475" cy="220" r="20" fill="#EC4899" stroke="white" strokeWidth="2" />
+                            <text x="475" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                            <circle cx="625" cy="220" r="20" fill="#6366F1" stroke="white" strokeWidth="2" />
+                            <text x="625" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                        </g>
+                        <circle cx="400" cy="60" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <path d="M 270 130 Q 400 180 530 130" stroke="#3B82F6" strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+                        <path d="M 530 110 Q 400 60 270 110" stroke="#F59E0B" strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+                        <text x="400" y="320" textAnchor="middle" fill="#6B7280" fontSize="16">Swap children of 4: (2) and associated subtree swaps with (7)'s subtree.</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 3: Recurse Right (now 2). Swap its children 1 and 3.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Processing Subtrees (7) and (2)</text>
+                        <line x1="400" y1="60" x2="250" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="130" x2="175" y2="220" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <line x1="250" y1="130" x2="325" y2="220" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <line x1="550" y1="130" x2="475" y2="220" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <line x1="550" y1="130" x2="625" y2="220" stroke="#E5E7EB" strokeWidth="2" strokeDasharray="4" />
+                        <circle cx="400" cy="60" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="250" cy="130" r="20" fill="#F59E0B" stroke="white" strokeWidth="2" />
+                        <text x="250" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="550" cy="130" r="20" fill="#10B981" stroke="white" strokeWidth="2" />
+                        <text x="550" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="175" cy="220" r="20" fill="#EC4899" stroke="white" strokeWidth="2" />
+                        <text x="175" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="325" cy="220" r="20" fill="#6366F1" stroke="white" strokeWidth="2" />
+                        <text x="325" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                        <circle cx="475" cy="220" r="20" fill="#EF4444" stroke="white" strokeWidth="2" />
+                        <text x="475" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="625" cy="220" r="20" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                        <text x="625" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <path d="M 190 220 Q 250 250 310 220" stroke="#EC4899" strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+                        <path d="M 490 220 Q 550 250 610 220" stroke="#EF4444" strokeWidth="2" fill="none" markerEnd="url(#arrowhead)" />
+                        <text x="400" y="320" textAnchor="middle" fill="#6B7280" fontSize="16">Recursively swap children of 7 (6&9) and children of 2 (1&3).</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 4: Process complete. Tree inverted.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Output: [4,7,2,9,6,3,1]</text>
+                        <line x1="400" y1="60" x2="250" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="130" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="130" x2="175" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="130" x2="325" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="550" y1="130" x2="475" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="550" y1="130" x2="625" y2="220" stroke="#9CA3AF" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="250" cy="130" r="20" fill="#F59E0B" stroke="white" strokeWidth="2" />
+                        <text x="250" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="550" cy="130" r="20" fill="#10B981" stroke="white" strokeWidth="2" />
+                        <text x="550" y="135" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="175" cy="220" r="20" fill="#6366F1" stroke="white" strokeWidth="2" />
+                        <text x="175" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                        <circle cx="325" cy="220" r="20" fill="#EC4899" stroke="white" strokeWidth="2" />
+                        <text x="325" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="475" cy="220" r="20" fill="#8B5CF6" stroke="white" strokeWidth="2" />
+                        <text x="475" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="625" cy="220" r="20" fill="#EF4444" stroke="white" strokeWidth="2" />
+                        <text x="625" y="225" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <text x="400" y="320" textAnchor="middle" fill="#6B7280" fontSize="16">Inversion complete.</text>
+                        <text x="400" y="340" textAnchor="middle" fill="#10B981" fontSize="14" fontWeight="600">Runtime: 32ms (Beats 85%)</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Interactive Approach", text: "Explain post-order or pre-order traversal concepts." },
+            { title: "Iterative Solution", text: "Be prepared to implement using a Queue (BFS) or Stack (DFS)." },
+            { title: "Edge Cases", text: "Explicitly mention empty tree and leaf nodes." },
+            { title: "In-Place vs New Tree", text: "Clarify if you should modify in-place." }
+        ],
+        mistakes: [
+            { title: "Forgetting return value", text: "Main function must return the new root." },
+            { title: "Swapping only values", text: "Swap pointers, not just values, for correct object semantics." },
+            { title: "Null Pointer Exceptions", text: "Forget to check if not root." }
+        ],
+        related: []
+    },
+    "maximum-depth-of-binary-tree": {
+        id: 104,
+        title: "Maximum Depth of Binary Tree",
+        difficulty: "Easy",
+        acceptance: "75.0%",
+        submissions: "3.2M",
+        tags: ["Tree", "DFS", "BFS", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, return its maximum depth.</p><p>A binary tree's <strong>maximum depth</strong> is the number of nodes along the longest path from the root node down to the farthest leaf node.</p>",
+        intuition: [
+            {
+                title: "Recursive Definition",
+                text: "The depth of a node is 1 + max(depth_left, depth_right)."
+            },
+            {
+                title: "Base Case",
+                text: "If a node is null, it contributes 0 to the depth."
+            },
+            {
+                title: "Traversal",
+                text: "We explore the tree (DFS). We go deep, finding the height of subtrees, and bubble the values up."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def maxDepth(self, root: Optional[TreeNode]) -> int:\n        if not root:\n            return 0\n        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))`,
+            java: `class Solution {\n    public int maxDepth(TreeNode root) {\n        if (root == null) {\n            return 0;\n        }\n        return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    int maxDepth(TreeNode* root) {\n        if (root == nullptr) {\n            return 0;\n        }\n        return 1 + max(maxDepth(root->left), maxDepth(root->right));\n    }\n}`,
+            javascript: `/**\n * @param {TreeNode} root\n * @return {number}\n */\nvar maxDepth = function(root) {\n    if (!root) return 0;\n    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "We visit every node to ensure we find the longest path." },
+            space: { value: "O(H)", explanation: "Recursion stack depth is equal to height of tree." }
+        },
+        visualSteps: [
+            {
+                desc: "Step 1: Start at Root (3). Calculate depth of left and right.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#F59E0B" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 1: Start Depth Calculation</text>
+                        <line x1="400" y1="60" x2="200" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="600" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="600" y1="160" x2="500" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="600" y1="160" x2="700" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="200" cy="160" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="200" y="165" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">9</text>
+                        <circle cx="600" cy="160" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="600" y="165" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">20</text>
+                        <circle cx="500" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="500" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">15</text>
+                        <circle cx="700" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="700" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">7</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 2: Go Left (9). Leaf node. Returns 1.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 2: Leaf Node (9)</text>
+                        <line x1="400" y1="60" x2="200" y2="160" stroke="#F59E0B" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                        <line x1="400" y1="60" x2="600" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <rect x="140" y="190" width="120" height="36" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="200" y="213" textAnchor="middle" fill="#1E3A8A" fontSize="12">Return 1</text>
+                        <circle cx="200" cy="160" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="200" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                        <circle cx="400" cy="60" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 3: Go Right (20). Calculate depth of children (15, 7).",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 3: Calculate Depth of Node 20</text>
+                        <line x1="600" y1="160" x2="500" y2="260" stroke="#F59E0B" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                        <line x1="600" y1="160" x2="700" y2="260" stroke="#F59E0B" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                        <rect x="650" y="140" width="140" height="40" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+                        <text x="720" y="165" textAnchor="middle" fill="#92400E" fontSize="12">max(1, 1) + 1 = 2</text>
+                        <circle cx="600" cy="160" r="30" fill="#F59E0B" stroke="#D97706" strokeWidth="4" />
+                        <text x="600" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">20</text>
+                        <text x="600" y="210" textAnchor="middle" fill="#F59E0B" fontWeight="600" fontSize="14">d=2</text>
+                        <circle cx="200" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="200" y="165" textAnchor="middle" fill="white" opacity="0.5">9</text>
+                        <text x="200" y="200" textAnchor="middle" fill="#10B981" opacity="0.5">d=1</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 4: Children 15 and 7 are leaves (return 1). Node 20 returns 1+1=2. Root returns 1+2=3.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 4: Final Calculation</text>
+                        <rect x="330" y="100" width="140" height="40" rx="4" fill="#FEF3C7" stroke="#F59E0B" />
+                        <text x="400" y="125" textAnchor="middle" fill="#92400E" fontSize="12">max(1, 2) + 1 = 3</text>
+                        <line x1="400" y1="60" x2="200" y2="160" stroke="#10B981" strokeWidth="3" />
+                        <line x1="400" y1="60" x2="600" y2="160" stroke="#10B981" strokeWidth="3" />
+                        <circle cx="400" cy="60" r="30" fill="#10B981" stroke="#059669" strokeWidth="4" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <text x="400" y="160" textAnchor="middle" fill="#10B981" fontWeight="600" fontSize="16">Depth = 3</text>
+                        <circle cx="200" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="200" y="165" textAnchor="middle" fill="white" opacity="0.5">9</text>
+                        <text x="200" y="200" textAnchor="middle" fill="#10B981" opacity="0.5">d=1</text>
+                        <circle cx="600" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="600" y="165" textAnchor="middle" fill="white" opacity="0.5">20</text>
+                        <text x="600" y="200" textAnchor="middle" fill="#10B981" opacity="0.5">d=2</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Iterative Approaches", text: "Know how to solve using BFS (Level Order) or DFS with Stack." },
+            { title: "Tail Recursion", text: "Discuss if the language supports it (usually requires accumulator)." },
+            { title: "Balanced vs Skewed", text: "Space complexity varies from log(N) to N." }
+        ],
+        mistakes: [
+            { title: "Off-by-one", text: "Confusing counting edges vs nodes. Problem asks for nodes." },
+            { title: "Base Case", text: "Forgetting if not root: return 0." },
+            { title: "Stack Overflow", text: "Deep recursion on very skewed trees without iterative fallback." }
+        ],
+        related: []
+    },
+    "kth-smallest-element-in-a-bst": {
+        id: 230,
+        title: "Kth Smallest Element in a BST",
+        difficulty: "Medium",
+        acceptance: "73.5%",
+        submissions: "2.1M",
+        tags: ["Tree", "DFS", "BST", "Binary Tree"],
+        description: "<p>Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.</p>",
+        intuition: [
+            {
+                title: "BST Property",
+                text: "In a Binary Search Tree (BST), the left subtree contains values smaller than the root, and the right subtree contains values larger."
+            },
+            {
+                title: "Inorder Traversal",
+                text: "Performing an inorder traversal (Left -> Root -> Right) on a BST visits the nodes in ascending sorted order."
+            },
+            {
+                title: "Finding k-th",
+                text: "Therefore, the k-th node visited during an inorder traversal is the k-th smallest element in the tree."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:\n        def inorder(node):\n            return inorder(node.left) + [node.val] + inorder(node.right) if node else []\n        \n        return inorder(root)[k - 1]`,
+            java: `class Solution {\n    public int kthSmallest(TreeNode root, int k) {\n        ArrayList<Integer> nums = new ArrayList<Integer>();\n        inorder(root, nums);\n        return nums.get(k - 1);\n    }\n    public void inorder(TreeNode root, ArrayList<Integer> arr) {\n        if (root == null) return;\n        inorder(root.left, arr);\n        arr.add(root.val);\n        inorder(root.right, arr);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    void inorder(TreeNode* root, vector<int>& nums) {\n        if (!root) return;\n        inorder(root->left, nums);\n        nums.push_back(root->val);\n        inorder(root->right, nums);\n    }\n    int kthSmallest(TreeNode* root, int k) {\n        vector<int> nums;\n        inorder(root, nums);\n        return nums[k - 1];\n    }\n}`,
+            javascript: `/**\n * @param {TreeNode} root\n * @param {number} k\n * @return {number}\n */\nvar kthSmallest = function(root, k) {\n    let result = [];\n    const inorder = (node) => {\n        if (!node) return;\n        inorder(node.left);\n        result.push(node.val);\n        inorder(node.right);\n    };\n    inorder(root);\n    return result[k - 1];\n};`
+        },
+        complexity: {
+            time: { value: "O(H + k)", explanation: "We traverse down the height H to the leftmost node, then process k nodes." },
+            space: { value: "O(H)", explanation: "Recursion stack depth is proportional to height of the tree." }
+        },
+        visualSteps: [
+            {
+                desc: "Step 1: Start with the BST structure. Target k=3.",
+                svg: (
+                    <g>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#3B82F6" />
+                            </marker>
+                        </defs>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Input: k = 3</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="160" x2="150" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="160" x2="350" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="250" cy="160" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="160" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="550" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="150" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="150" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">null</text>
+                        <circle cx="350" cy="260" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="350" y="265" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 2: Traverse all the way left. Node 1 is the 1st smallest.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 2: Inorder Traversal - Visit Left</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="160" x2="150" y2="260" stroke="#3B82F6" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                        <line x1="250" y1="160" x2="350" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="250" cy="160" r="25" fill="#10B981" stroke="white" strokeWidth="2" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <text x="250" y="200" textAnchor="middle" fill="#10B981" fontSize="14" fontWeight="600">k=1</text>
+                        <circle cx="400" cy="60" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="550" cy="160" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="550" y="165" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="150" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="150" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">null</text>
+                        <circle cx="350" cy="260" r="25" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="350" y="265" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 3: Backtrack to parent Node 2. Node 2 is the 2nd smallest.",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 3: Inorder Traversal - Visit Node 2</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="160" x2="150" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="250" y1="160" x2="350" y2="260" stroke="#3B82F6" strokeWidth="3" markerEnd="url(#arrowhead)" />
+                        <rect x="290" y="240" width="120" height="40" rx="4" fill="#DBEAFE" stroke="#3B82F6" />
+                        <text x="350" y="265" textAnchor="middle" fill="#1E3A8A" fontSize="12">Right Child (2)</text>
+                        <circle cx="350" cy="260" r="30" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="350" y="265" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">2</text>
+                        <text x="350" y="310" textAnchor="middle" fill="#10B981" fontSize="14" fontWeight="600">k=2</text>
+                        <circle cx="250" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" opacity="0.5">1</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 4: Backtrack to parent Node 3. Node 3 is the 3rd smallest. Target!",
+                svg: (
+                    <g>
+                        <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">Step 4: Visit Root (3). Target Reached!</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#3B82F6" strokeWidth="3" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <rect x="440" y="40" width="120" height="40" rx="4" fill="#D1FAE5" stroke="#10B981" />
+                        <text x="500" y="65" textAnchor="middle" fill="#047857" fontSize="12" fontWeight="600">Found k=3!</text>
+                        <circle cx="400" cy="60" r="30" fill="#F59E0B" stroke="#D97706" strokeWidth="4" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">3</text>
+                        <circle cx="250" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" opacity="0.5">1</text>
+                        <circle cx="350" cy="260" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="350" y="265" textAnchor="middle" fill="white" opacity="0.5">2</text>
+                        <text x="400" y="120" textAnchor="middle" fill="#D97706" fontSize="16" fontWeight="700">Result: 3</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Constraint Optimization", text: "If BST modified often, store count of nodes in left subtree." },
+            { title: "Iterative Solution", text: "Use stack-based inorder traversal to stop early." },
+            { title: "k vs N", text: "If k is small, complexity is dominated by H." }
+        ],
+        mistakes: [
+            { title: "Indexing", text: "1-based indexing for k vs 0-based arrays." },
+            { title: "Not using BST property", text: "Sorting all nodes is O(N log N), inorder is O(N)." }
+        ],
+        related: []
+    },
+    "binary-tree-level-order-traversal": {
+        id: 102,
+        title: "Binary Tree Level Order Traversal",
+        difficulty: "Medium",
+        acceptance: "68.4%",
+        submissions: "2.8M",
+        tags: ["Tree", "BFS", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).</p>",
+        intuition: [
+            {
+                title: "Level-by-Level",
+                text: "Group nodes by their depth level, from top to bottom."
+            },
+            {
+                title: "BFS Strategy",
+                text: "Breadth-First Search (BFS) is the natural choice for exploring a tree or graph layer by layer."
+            },
+            {
+                title: "Queue Usage",
+                text: "Use a queue to store nodes of the current level. For each node processed, enqueue its children."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:\n        if not root:\n            return []\n        \n        result = []\n        queue = collections.deque([root])\n        \n        while queue:\n            level_size = len(queue)\n            current_level = []\n            \n            for _ in range(level_size):\n                node = queue.popleft()\n                current_level.append(node.val)\n                \n                if node.left:\n                    queue.append(node.left)\n                if node.right:\n                    queue.append(node.right)\n            \n            result.append(current_level)\n            \n        return result`,
+            java: `class Solution {\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        List<List<Integer>> result = new ArrayList<>();\n        if (root == null) return result;\n        \n        Queue<TreeNode> queue = new LinkedList<>();\n        queue.add(root);\n        \n        while (!queue.isEmpty()) {\n            int levelSize = queue.size();\n            List<Integer> currentLevel = new ArrayList<>();\n            \n            for (int i = 0; i < levelSize; i++) {\n                TreeNode node = queue.poll();\n                currentLevel.add(node.val);\n                \n                if (node.left != null) queue.add(node.left);\n                if (node.right != null) queue.add(node.right);\n            }\n            result.add(currentLevel);\n        }\n        return result;\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    vector<vector<int>> levelOrder(TreeNode* root) {\n        vector<vector<int>> result;\n        if (!root) return result;\n        \n        queue<TreeNode*> q;\n        q.push(root);\n        \n        while (!q.empty()) {\n            int levelSize = q.size();\n            vector<int> currentLevel;\n            \n            for (int i = 0; i < levelSize; i++) {\n                TreeNode* node = q.front();\n                q.pop();\n                currentLevel.push_back(node->val);\n                \n                if (node->left) q.push(node->left);\n                if (node->right) q.push(node->right);\n            }\n            result.push_back(currentLevel);\n        }\n        return result;\n    }\n}`,
+            javascript: `/**\n * @param {TreeNode} root\n * @return {number[][]}\n */\nvar levelOrder = function(root) {\n    if (!root) return [];\n    \n    const result = [];\n    const queue = [root];\n    \n    while (queue.length > 0) {\n        const levelSize = queue.length;\n        const currentLevel = [];\n        \n        for (let i = 0; i < levelSize; i++) {\n            const node = queue.shift();\n            currentLevel.push(node.val);\n            \n            if (node.left) queue.push(node.left);\n            if (node.right) queue.push(node.right);\n        }\n        result.push(currentLevel);\n    }\n    return result;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "Process each node exactly once." },
+            space: { value: "O(W)", explanation: "W is max width. Queue can hold N/2 nodes in worst case." }
+        },
+        visualSteps: [
+            {
+                desc: "Step 1: Start BFS with Root in Queue.",
+                svg: (
+                    <g>
+                        <defs>
+                            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                                <feOffset dx="1" dy="1" result="offsetblur" />
+                                <feFlood floodOpacity="0.1" />
+                                <feComposite in2="offsetblur" operator="in" />
+                                <feMerge>
+                                    <feMergeNode />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <text x="400" y="20" textAnchor="middle" fill="#6B7280" fontSize="14">Level 1: Process Root (3)</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="480" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="620" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="400" y="61" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">3</text>
+                        <circle cx="250" cy="160" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="250" y="165" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">9</text>
+                        <circle cx="550" cy="160" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="550" y="165" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">20</text>
+                        <circle cx="480" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="480" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">15</text>
+                        <circle cx="620" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="620" y="265" textAnchor="middle" fill="#6B7280" fontWeight="600" fontSize="14">7</text>
+                        <rect x="50" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="70" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Result:</tspan> []
+                        </text>
+                        <rect x="450" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="470" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Queue Next:</tspan> [3]
+                        </text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 2: Level 1: Process Root. Add children to Queue.",
+                svg: (
+                    <g>
+                        <text x="400" y="20" textAnchor="middle" fill="#6B7280" fontSize="14">Level 2: Process Nodes 9, 20</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="480" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="620" y2="260" stroke="#E5E7EB" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" opacity="0.5">3</text>
+                        <circle cx="250" cy="160" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="250" y="161" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">9</text>
+                        <circle cx="550" cy="160" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="550" y="161" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">20</text>
+                        <circle cx="480" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="480" y="265" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">15</text>
+                        <circle cx="620" cy="260" r="25" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2" />
+                        <text x="620" y="265" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <rect x="50" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="70" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Result:</tspan> [[3]]
+                        </text>
+                        <rect x="450" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="470" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Queue Next:</tspan> [9, 20]
+                        </text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 3: Level 2: Process nodes in Queue. Add their children.",
+                svg: (
+                    <g>
+                        <text x="400" y="20" textAnchor="middle" fill="#6B7280" fontSize="14">Level 3: Process Nodes 15, 7</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="480" y2="260" stroke="#10B981" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="620" y2="260" stroke="#10B981" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" opacity="0.5">3</text>
+                        <circle cx="250" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" opacity="0.5">9</text>
+                        <circle cx="550" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="550" y="165" textAnchor="middle" fill="white" opacity="0.5">20</text>
+                        <circle cx="480" cy="260" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="480" y="261" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">15</text>
+                        <circle cx="620" cy="260" r="30" fill="#3B82F6" stroke="#2563EB" strokeWidth="4" />
+                        <text x="620" y="261" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">7</text>
+                        <rect x="50" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="70" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Result:</tspan> [[3], [9, 20]]
+                        </text>
+                        <rect x="450" y="320" width="300" height="50" rx="8" fill="white" stroke="#E5E7EB" strokeWidth="1" filter="url(#shadow)" />
+                        <text x="470" y="350" fill="#374151" fontSize="14" fontFamily="monospace">
+                            <tspan fontWeight="600" fill="#6B7280">Queue Next:</tspan> [15, 7]
+                        </text>
+                    </g>
+                )
+            },
+            {
+                desc: "Step 4: Level 3: Process remaining nodes. Done.",
+                svg: (
+                    <g>
+                        <text x="400" y="20" textAnchor="middle" fill="#6B7280" fontSize="14">Traversal Complete</text>
+                        <line x1="400" y1="60" x2="250" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="400" y1="60" x2="550" y2="160" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="480" y2="260" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <line x1="550" y1="160" x2="620" y2="260" stroke="#10B981" opacity="0.5" strokeWidth="2" />
+                        <circle cx="400" cy="60" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="400" y="65" textAnchor="middle" fill="white" opacity="0.5">3</text>
+                        <circle cx="250" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="250" y="165" textAnchor="middle" fill="white" opacity="0.5">9</text>
+                        <circle cx="550" cy="160" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="550" y="165" textAnchor="middle" fill="white" opacity="0.5">20</text>
+                        <circle cx="480" cy="260" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="480" y="265" textAnchor="middle" fill="white" opacity="0.5">15</text>
+                        <circle cx="620" cy="260" r="25" fill="#10B981" opacity="0.5" />
+                        <text x="620" y="265" textAnchor="middle" fill="white" opacity="0.5">7</text>
+                        <rect x="150" y="320" width="500" height="50" rx="8" fill="#ECFDF5" stroke="#10B981" strokeWidth="2" filter="url(#shadow)" />
+                        <text x="400" y="350" textAnchor="middle" fill="#065F46" fontSize="16" fontFamily="monospace" fontWeight="600">
+                            Result: [[3], [9, 20], [15, 7]]
+                        </text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "DFS vs BFS", text: "BFS is cleaner for level-order." },
+            { title: "Queue Size", text: "Capture queue.size() to separate levels." },
+            { title: "ZigZag Variation", text: "Common follow-up (Problem 103)." }
+        ],
+        mistakes: [
+            { title: "Forgetting Level Loop", text: "Must have inner loop for level separation." },
+            { title: "Empty Root", text: "Handle null root first." }
+        ],
+        related: []
+    }
 };
