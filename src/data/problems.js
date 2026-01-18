@@ -744,19 +744,19 @@ export const problemsData = {
   visualSteps: [
     {
       desc: "Initialize: low = 0, high = length-1.",
-      image: "/images/search-rotated-step1.jpeg"
+      image: "/images/problem 33/step1.png"
     },
     {
       desc: "Check mid element and compare with target.",
-      image: "/images/search-rotated-step2.jpeg"
+      image: "/images/problem 33/step2.png"
     },
     {
       desc: "Determine which half is sorted and narrow search accordingly.",
-      image: "/images/search-rotated-step3.jpeg"
+      image: "/images/problem 33/step3.png"
     },
     {
       desc: "Repeat until target is found or low > high.",
-      image: "/images/search-rotated-step4.jpeg"
+      image: "/images/problem 33/step4.png"
     }
   ],
   mistakes: [
