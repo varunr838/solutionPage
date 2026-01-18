@@ -221,120 +221,62 @@ export const problemsData = {
       { title: "One-liner vs. Efficiency:", text: "A one-liner like `s == s[::-1]` is elegant but uses extra space. Be ready to discuss this trade-off." },
       { title: "Empty Strings:", text: "Confirm with the interviewer if an empty string or a string with only spaces is considered a palindrome (usually true)." }
     ]
-},
-"valid-parentheses": {
+},"valid-parentheses": {
   id: 20,
   title: "Valid Parentheses",
   difficulty: "Easy",
   acceptance: "41.9%",
-  submissions: "11.8M",
-  tags: ["Stack", "String"],
-  description:
-    "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets are closed by the same type of brackets and in the correct order.",
+  submissions: "6.1M",
+  tags: ["String", "Stack"],
+  description: "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets are closed by the same type of brackets and in the correct order.",
   intuition: [
     {
-      title: "Understand the structure:",
-      text: "Every opening bracket must have a corresponding closing bracket, and they must be closed in the correct order."
+      title: "Understand the problem:",
+      text: "We need to check whether every opening bracket has a corresponding closing bracket of the same type, and that brackets close in the correct order."
     },
     {
-      title: "Why stack works:",
-      text: "Parentheses are a classic LIFO (Last In First Out) problem. The most recently opened bracket must be closed first."
+      title: "Key observation:",
+      text: "The most recent opening bracket must be closed first. This Last-In-First-Out (LIFO) behavior naturally suggests using a stack."
     },
     {
-      title: "Processing the string:",
-      text: "When we see an opening bracket, we push it onto the stack. When we see a closing bracket, we check if it matches the top of the stack."
+      title: "Stack-based approach:",
+      text: "We iterate through the string. When we see an opening bracket, we push it onto the stack. When we see a closing bracket, we check whether it matches the top of the stack."
     },
     {
       title: "Final validation:",
-      text: "At the end, the stack should be empty. Any leftover opening brackets mean the string is invalid."
+      text: "At the end, the stack must be empty. If not, there are unmatched opening brackets, making the string invalid."
     }
   ],
   codeSnippets: {
-    java: `public boolean isValid(String s) {
-    Stack<Character> stack = new Stack<>();
-    for (char c : s.toCharArray()) {
-        if (c == '(' || c == '{' || c == '[') {
-            stack.push(c);
-        } else {
-            if (stack.isEmpty()) return false;
-            char top = stack.pop();
-            if (c == ')' && top != '(') return false;
-            if (c == '}' && top != '{') return false;
-            if (c == ']' && top != '[') return false;
-        }
-    }
-    return stack.isEmpty();
-}`,
-    python: `def isValid(self, s: str) -> bool:
-    stack = []
-    mapping = {')': '(', '}': '{', ']': '['}
-
-    for char in s:
-        if char in mapping:
-            if not stack or stack.pop() != mapping[char]:
-                return False
-        else:
-            stack.append(char)
-
-    return not stack`
+    java: `public boolean isValid(String s) {\n    Stack<Character> stack = new Stack<>();\n    for (char c : s.toCharArray()) {\n        if (c == '(' || c == '{' || c == '[') {\n            stack.push(c);\n        } else {\n            if (stack.isEmpty()) return false;\n            char top = stack.pop();\n            if ((c == ')' && top != '(') ||\n                (c == '}' && top != '{') ||\n                (c == ']' && top != '[')) {\n                return false;\n            }\n        }\n    }\n    return stack.isEmpty();\n}`,
+    python: `def isValid(s):\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    for char in s:\n        if char in mapping.values():\n            stack.append(char)\n        else:\n            if not stack or stack.pop() != mapping[char]:\n                return False\n    return not stack`
   },
   complexity: {
     time: {
       value: "O(n)",
-      explanation: "Each character is processed once."
+      explanation: "Each character in the string is processed once."
     },
     space: {
       value: "O(n)",
-      explanation: "In the worst case, all characters are opening brackets stored in the stack."
+      explanation: "In the worst case, all opening brackets are stored in the stack."
     }
   },
   visualSteps: [
     {
-      desc: "Initialize: Start with an empty stack.",
-      svg: (
-        <g>
-          <rect x="400" y="100" width="200" height="120" rx="8" fill="#F1F5F9" stroke="#94A3B8" />
-          <text x="500" y="130" textAnchor="middle" fill="#64748b" fontWeight="bold">Stack</text>
-          <text x="500" y="170" textAnchor="middle" fill="#94A3B8">{ "Empty" }</text>
-
-          <text x="200" y="160" fontSize="20" fill="var(--text-primary)">Input: "()[]{}"</text>
-        </g>
-      )
+      desc: "Initialize: Start with an empty stack and the input string.",
+      image: "/images/problem20/step1.png"
     },
     {
-      desc: "Read '(' → opening bracket → push onto stack.",
-      svg: (
-        <g>
-          <rect x="400" y="100" width="200" height="120" rx="8" fill="#DBEAFE" stroke="#3B82F6" />
-          <text x="500" y="130" textAnchor="middle" fill="#1E3A8A" fontWeight="bold">Stack</text>
-          <text x="500" y="170" textAnchor="middle" fill="#1E3A8A">(</text>
-
-          <text x="200" y="160" fontSize="20" fill="var(--text-primary)">Reading: (</text>
-        </g>
-      )
+      desc: "Step 1: Read '(' → opening bracket, push to stack.",
+      image: "/images/problem20/step2.png"
     },
     {
-      desc: "Read ')' → closing bracket → pop and match '(' ✔",
-      svg: (
-        <g>
-          <rect x="400" y="100" width="200" height="120" rx="8" fill="#D1FAE5" stroke="#10B981" />
-          <text x="500" y="130" textAnchor="middle" fill="#064E3B" fontWeight="bold">Stack</text>
-          <text x="500" y="170" textAnchor="middle" fill="#064E3B">Empty</text>
-
-          <text x="200" y="160" fontSize="20" fill="#10B981">Match Found ✔</text>
-        </g>
-      )
+      desc: "Step 2: Read ')' → closing bracket, pop '(' from stack and match.",
+      image: "/images/problem20/step3.png"
     },
     {
-      desc: "Continue for all characters. Stack is empty at the end.",
-      svg: (
-        <g>
-          <rect x="250" y="250" width="300" height="60" rx="30" fill="#10B981" />
-          <text x="400" y="288" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">
-            Result: Valid Parentheses
-          </text>
-        </g>
-      )
+      desc: "Final Step: Stack is empty → string is valid.",
+      image: "/images/problem20/step4.png"
     }
   ],
   mistakes: [
@@ -343,229 +285,139 @@ export const problemsData = {
       text: "If a closing bracket appears when the stack is empty, the string is invalid."
     },
     {
+      title: "Mismatched brackets:",
+      text: "Make sure each closing bracket matches the correct type of opening bracket."
+    },
+    {
       title: "Ignoring order:",
-      text: "A string like '(]' is invalid even though it has one opening and one closing bracket."
+      text: "Even if the count of brackets matches, incorrect nesting (e.g., '(]') makes the string invalid."
     },
     {
       title: "Forgetting final stack check:",
-      text: "An input like '(((' should return false because not all brackets are closed."
-    },
-    {
-      title: "Using counters instead of stack:",
-      text: "Counters fail for cases like '([)]' where order matters."
+      text: "If the stack is not empty after processing the string, there are unmatched opening brackets."
     }
   ],
   related: [
     {
+      id: 22,
+      title: "Generate Parentheses",
+      difficulty: "Medium",
+      tags: ["String", "Backtracking"],
+      link: "/problem/generate-parentheses"
+    },
+    {
       id: 32,
       title: "Longest Valid Parentheses",
       difficulty: "Hard",
-      tags: ["Stack", "Dynamic Programming"],
+      tags: ["String", "Stack", "Dynamic Programming"],
       link: "/problem/longest-valid-parentheses"
     },
     {
-      id: 678,
-      title: "Valid Parenthesis String",
+      id: 856,
+      title: "Score of Parentheses",
       difficulty: "Medium",
-      tags: ["Stack", "Greedy"],
-      link: "/problem/valid-parenthesis-string"
+      tags: ["Stack", "String"],
+      link: "/problem/score-of-parentheses"
     }
   ],
   tips: [
     {
-      title: "Use a map for matching:",
-      text: "Mapping closing → opening brackets simplifies comparison logic."
+      title: "Think in terms of stack:",
+      text: "Whenever you see problems involving matching pairs and order, consider using a stack."
     },
     {
-      title: "Explain why stack is needed:",
-      text: "Interviewers love hearing the LIFO reasoning behind the stack choice."
+      title: "Use a hashmap for matching:",
+      text: "Mapping closing brackets to opening ones simplifies comparisons and avoids multiple condition checks."
     },
     {
-      title: "Edge cases:",
-      text: "Empty string is valid. A single bracket is invalid."
+      title: "Test edge cases:",
+      text: "Check cases like empty string, single bracket, and strings starting with a closing bracket."
     },
     {
-      title: "Dry run examples:",
-      text: "Walk through '()[]{}' and '([)]' to clearly demonstrate correctness."
+      title: "Explain with an example:",
+      text: "Walk through a sample like '([{}])' to clearly demonstrate how the stack changes step by step."
+    },
+    {
+      title: "Watch for early exits:",
+      text: "Return false as soon as you detect an invalid condition to keep the solution efficient."
     }
   ]
-},
+}
+,
 "min-stack": {
   id: 155,
   title: "Min Stack",
-  difficulty: "Medium",
-  acceptance: "45.1%",
-  submissions: "2.8M",
+  difficulty: "Easy",
+  acceptance: "43.8%",
+  submissions: "3.9M",
   tags: ["Stack", "Design"],
-  description:
-    "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time. Implement the MinStack class:\n\n- push(val) pushes the element val onto the stack.\n- pop() removes the element on top of the stack.\n- top() gets the top element of the stack.\n- getMin() retrieves the minimum element in the stack.",
+  description: "Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.",
   intuition: [
     {
-      title: "Stack basics:",
-      text: "A normal stack allows push, pop, and top operations. The challenge here is tracking the minimum element efficiently."
+      title: "Understand the problem:",
+      text: "We need to implement a stack that behaves like a normal stack but also allows retrieving the minimum element at any time in O(1) time."
     },
     {
-      title: "Why naive approach fails:",
-      text: "If we scan the stack each time to find the minimum, getMin() becomes O(n). We need O(1) for all operations."
+      title: "Why a normal stack fails:",
+      text: "In a regular stack, finding the minimum requires scanning all elements, which is O(n) time."
     },
     {
-      title: "Using an auxiliary stack:",
-      text: "We can use an extra stack to keep track of the minimum at each point. Whenever we push a new element, also push the new minimum so far."
+      title: "Optimized approach:",
+      text: "Use an auxiliary stack to track the minimum values. When pushing a new element, also push it to the min stack if it's smaller than or equal to the current minimum."
     },
     {
       title: "Key insight:",
-      text: "By maintaining the current minimum at each push, getMin() becomes O(1). Space complexity is O(n) due to the auxiliary stack."
+      text: "The top of the min stack always holds the current minimum. This allows O(1) retrieval while maintaining normal stack operations."
     }
   ],
   codeSnippets: {
-    java: `class MinStack {
-    private Stack<Integer> stack;
-    private Stack<Integer> minStack;
-
-    public MinStack() {
-        stack = new Stack<>();
-        minStack = new Stack<>();
-    }
-
-    public void push(int val) {
-        stack.push(val);
-        if (minStack.isEmpty() || val <= minStack.peek()) {
-            minStack.push(val);
-        } else {
-            minStack.push(minStack.peek());
-        }
-    }
-
-    public void pop() {
-        stack.pop();
-        minStack.pop();
-    }
-
-    public int top() {
-        return stack.peek();
-    }
-
-    public int getMin() {
-        return minStack.peek();
-    }
-}`,
-    python: `class MinStack:
-    def __init__(self):
-        self.stack = []
-        self.minStack = []
-
-    def push(self, val: int) -> None:
-        self.stack.append(val)
-        if not self.minStack or val <= self.minStack[-1]:
-            self.minStack.append(val)
-        else:
-            self.minStack.append(self.minStack[-1])
-
-    def pop(self) -> None:
-        self.stack.pop()
-        self.minStack.pop()
-
-    def top(self) -> int:
-        return self.stack[-1]
-
-    def getMin(self) -> int:
-        return self.minStack[-1]`
+    java: "class MinStack {\n    Stack<Integer> stack = new Stack<>();\n    Stack<Integer> minStack = new Stack<>();\n\n    public void push(int val) {\n        stack.push(val);\n        if (minStack.isEmpty() || val <= minStack.peek()) {\n            minStack.push(val);\n        }\n    }\n\n    public void pop() {\n        if (stack.pop().equals(minStack.peek())) {\n            minStack.pop();\n        }\n    }\n\n    public int top() {\n        return stack.peek();\n    }\n\n    public int getMin() {\n        return minStack.peek();\n    }\n}",
+    python: "class MinStack:\n    def __init__(self):\n        self.stack = []\n        self.min_stack = []\n\n    def push(self, val: int) -> None:\n        self.stack.append(val)\n        if not self.min_stack or val <= self.min_stack[-1]:\n            self.min_stack.append(val)\n\n    def pop(self) -> None:\n        if self.stack.pop() == self.min_stack[-1]:\n            self.min_stack.pop()\n\n    def top(self) -> int:\n        return self.stack[-1]\n\n    def getMin(self) -> int:\n        return self.min_stack[-1]"
   },
   complexity: {
     time: {
       value: "O(1)",
-      explanation: "All operations (push, pop, top, getMin) are constant time."
+      explanation: "All operations (push, pop, top, getMin) run in constant time."
     },
     space: {
       value: "O(n)",
-      explanation: "We use an auxiliary stack to store the minimum at each step."
+      explanation: "Extra space is used for the auxiliary min stack."
     }
   },
   visualSteps: [
     {
-      desc: "Initialize: Both main stack and min stack are empty.",
-      svg: (
-        <g>
-          <rect x="250" y="100" width="200" height="120" rx="8" fill="#F1F5F9" stroke="#94A3B8" />
-          <text x="350" y="130" textAnchor="middle" fill="#64748b" fontWeight="bold">Stack</text>
-          <text x="350" y="170" textAnchor="middle" fill="#94A3B8">Empty</text>
-
-          <rect x="500" y="100" width="200" height="120" rx="8" fill="#F1F5F9" stroke="#94A3B8" />
-          <text x="600" y="130" textAnchor="middle" fill="#64748b" fontWeight="bold">Min Stack</text>
-          <text x="600" y="170" textAnchor="middle" fill="#94A3B8">Empty</text>
-        </g>
-      )
+      desc: "Initialize: Start with empty main stack and min stack.",
+      image: "/images/problem 155/step1.png"
     },
     {
-      desc: "Push 5: Stack = [5], MinStack = [5]",
-      svg: (
-        <g>
-          <rect x="250" y="100" width="200" height="120" rx="8" fill="#DBEAFE" stroke="#3B82F6" />
-          <text x="350" y="130" textAnchor="middle" fill="#1E3A8A" fontWeight="bold">Stack</text>
-          <text x="350" y="170" textAnchor="middle" fill="#1E3A8A">[5]</text>
-
-          <rect x="500" y="100" width="200" height="120" rx="8" fill="#DBEAFE" stroke="#3B82F6" />
-          <text x="600" y="130" textAnchor="middle" fill="#1E3A8A" fontWeight="bold">Min Stack</text>
-          <text x="600" y="170" textAnchor="middle" fill="#1E3A8A">[5]</text>
-        </g>
-      )
+      desc: "Push 5: stack = [5], minStack = [5].",
+      image: "/images/problem 155/step2.png"
     },
     {
-      desc: "Push 3: Stack = [5,3], MinStack = [5,3]",
-      svg: (
-        <g>
-          <rect x="250" y="100" width="200" height="120" rx="8" fill="#D1FAE5" stroke="#10B981" />
-          <text x="350" y="130" textAnchor="middle" fill="#064E3B" fontWeight="bold">Stack</text>
-          <text x="350" y="170" textAnchor="middle" fill="#064E3B">[5,3]</text>
-
-          <rect x="500" y="100" width="200" height="120" rx="8" fill="#D1FAE5" stroke="#10B981" />
-          <text x="600" y="130" textAnchor="middle" fill="#064E3B" fontWeight="bold">Min Stack</text>
-          <text x="600" y="170" textAnchor="middle" fill="#064E3B">[5,3]</text>
-        </g>
-      )
+      desc: "Push 3: stack = [5, 3], minStack = [5, 3] (new minimum).",
+      image: "/images/problem 155/step3.png"
     },
     {
-      desc: "Push 7: Stack = [5,3,7], MinStack = [5,3,3]",
-      svg: (
-        <g>
-          <rect x="250" y="100" width="200" height="120" rx="8" fill="#FDE68A" stroke="#F59E0B" />
-          <text x="350" y="130" textAnchor="middle" fill="#78350F" fontWeight="bold">Stack</text>
-          <text x="350" y="170" textAnchor="middle" fill="#78350F">[5,3,7]</text>
-
-          <rect x="500" y="100" width="200" height="120" rx="8" fill="#FDE68A" stroke="#F59E0B" />
-          <text x="600" y="130" textAnchor="middle" fill="#78350F" fontWeight="bold">Min Stack</text>
-          <text x="600" y="170" textAnchor="middle" fill="#78350F">[5,3,3]</text>
-        </g>
-      )
-    },
-    {
-      desc: "Pop: Remove 7 → Stack = [5,3], MinStack = [5,3], getMin() = 3",
-      svg: (
-        <g>
-          <rect x="250" y="250" width="300" height="60" rx="30" fill="#10B981" />
-          <text x="400" y="288" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">
-            Current Min: 3
-          </text>
-        </g>
-      )
+      desc: "Pop: remove 3 from both stacks, min becomes 5 again.",
+      image: "/images/problem 155/step4.png"
     }
   ],
   mistakes: [
     {
-      title: "Tracking min incorrectly:",
-      text: "Don't just store the minimum in a single variable, because popping the minimum requires updating it."
+      title: "Not tracking minimum separately:",
+      text: "Without an auxiliary structure, retrieving the minimum element cannot be done in O(1) time."
     },
     {
-      title: "Push order mismatch:",
-      text: "Always update the minStack even if the new value is greater, by pushing the current minimum again."
+      title: "Forgetting duplicate minimums:",
+      text: "If the same minimum value appears multiple times, it must be pushed multiple times onto the min stack."
     },
     {
-      title: "Pop mismatch:",
-      text: "Both stacks must pop simultaneously to maintain correct min tracking."
+      title: "Incorrect pop logic:",
+      text: "Always compare the popped value with the top of the min stack before popping from the min stack."
     },
     {
-      title: "Assuming no duplicates:",
-      text: "Duplicates are allowed. Make sure minStack duplicates values as needed."
+      title: "Assuming stack is never empty:",
+      text: "Operations like pop, top, and getMin assume the stack is non-empty, as stated in the problem constraints."
     }
   ],
   related: [
@@ -577,158 +429,134 @@ export const problemsData = {
       link: "/problem/valid-parentheses"
     },
     {
-      id: 42,
-      title: "Trapping Rain Water",
+      id: 739,
+      title: "Daily Temperatures",
+      difficulty: "Medium",
+      tags: ["Stack", "Array"],
+      link: "/problem/daily-temperatures"
+    },
+    {
+      id: 84,
+      title: "Largest Rectangle in Histogram",
       difficulty: "Hard",
-      tags: ["Stack", "Two Pointers"],
-      link: "/problem/trapping-rain-water"
+      tags: ["Stack", "Array"],
+      link: "/problem/largest-rectangle-histogram"
     }
   ],
   tips: [
     {
-      title: "Explain auxiliary stack approach:",
-      text: "Interviewers expect O(1) min retrieval, so show you know how to track min efficiently."
+      title: "Explain the auxiliary stack clearly:",
+      text: "Interviewers want to see how the min stack mirrors changes in the main stack."
     },
     {
-      title: "Edge cases:",
-      text: "Empty stack operations should be handled (pop/top/getMin). Clarify with interviewer."
+      title: "Mention space-time tradeoff:",
+      text: "Extra space is used to achieve constant-time minimum retrieval."
     },
     {
-      title: "Consider space optimization:",
-      text: "You can optimize by storing only new minima instead of duplicating values in minStack."
+      title: "Walk through an example:",
+      text: "Demonstrate push and pop operations with changing minimums."
+    },
+    {
+      title: "Handle duplicates carefully:",
+      text: "Always push equal minimum values to avoid losing track when popping."
+    },
+    {
+      title: "Alternative approach:",
+      text: "You can also store pairs (value, currentMin) in a single stack, which achieves the same result."
     }
   ]
-},
+}
+,
 "binary-search": {
   id: 704,
   title: "Binary Search",
   difficulty: "Easy",
-  acceptance: "52.8%",
-  submissions: "5.7M",
-  tags: ["Array", "Binary Search", "Divide and Conquer"],
-  description:
-    "Given a sorted array of integers `nums` and an integer `target`, return the index of `target` if it exists in `nums`, otherwise return -1. You must write an algorithm with O(log n) runtime complexity.",
+  acceptance: "49.7%",
+  submissions: "5.1M",
+  tags: ["Array", "Binary Search"],
+  description: "Given a sorted array of integers `nums` and a target value `target`, return the index of the target if it exists in the array. Otherwise, return -1.",
   intuition: [
     {
-      title: "Leverage the sorted property:",
-      text: "Since the array is sorted, we can eliminate half of the search space at each step."
+      title: "Understand the problem:",
+      text: "We need to find the position of a target element in a sorted array. Linear search works, but we can do better with the sorted property."
     },
     {
-      title: "Divide and conquer:",
-      text: "Binary search repeatedly checks the middle element and decides whether to search left or right."
+      title: "Key observation:",
+      text: "The array is sorted. This allows us to repeatedly divide the search space in half instead of checking each element sequentially."
     },
     {
-      title: "Loop vs Recursion:",
-      text: "Binary search can be implemented iteratively (preferred in interviews) or recursively."
+      title: "Binary Search approach:",
+      text: "Use two pointers (`low` and `high`). Compute `mid = (low + high) // 2`. Compare `nums[mid]` with the target and reduce the search space accordingly."
     },
     {
-      title: "Edge cases:",
-      text: "Empty array, target not present, target at first or last index, duplicate elements (return any valid index)."
+      title: "Termination condition:",
+      text: "Repeat until `low > high`. If target is found, return `mid`. Otherwise, return -1."
     }
   ],
   codeSnippets: {
-    java: `public int search(int[] nums, int target) {
-    int left = 0, right = nums.length - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] == target) return mid;
-        else if (nums[mid] < target) left = mid + 1;
-        else right = mid - 1;
-    }
-    return -1;
-}`,
-    python: `def search(nums: List[int], target: int) -> int:
-    left, right = 0, len(nums) - 1
-    while left <= right:
-        mid = left + (right - left) // 2
-        if nums[mid] == target:
-            return mid
-        elif nums[mid] < target:
-            left = mid + 1
-        else:
-            right = mid - 1
-    return -1`
+    java: "public int search(int[] nums, int target) {\n    int low = 0, high = nums.length - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n        else if (nums[mid] < target) low = mid + 1;\n        else high = mid - 1;\n    }\n    return -1;\n}",
+    python: "def binarySearch(nums, target):\n    low, high = 0, len(nums) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if nums[mid] == target:\n            return mid\n        elif nums[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1"
   },
   complexity: {
     time: {
       value: "O(log n)",
-      explanation: "Each iteration halves the search space, so logarithmic time complexity."
+      explanation: "We halve the search space with each step."
     },
     space: {
       value: "O(1)",
-      explanation: "Iterative version uses constant space."
+      explanation: "Iterative implementation uses constant extra space."
     }
   },
   visualSteps: [
     {
-      desc: "Initial State: Full array with pointers at both ends.",
-      svg: (
-        <g>
-          <text x="400" y="100" textAnchor="middle" fill="var(--text-primary)" fontSize="24" fontFamily="monospace">nums = [1,3,5,7,9,11,13]</text>
-          <text x="100" y="140" fill="#3B82F6" fontWeight="bold">L</text>
-          <text x="700" y="140" fill="#EF4444" fontWeight="bold">R</text>
-        </g>
-      )
+      desc: "Initialize: low = 0, high = length-1.",
+      image: "/images/problem 704/step1.png"
     },
     {
-      desc: "Step 1: Check middle element. mid = 3, nums[3] = 7. Target = 9 → search right.",
-      svg: (
-        <g>
-          <text x="400" y="100" textAnchor="middle" fill="var(--text-primary)" fontSize="24" fontFamily="monospace">nums = [1,3,5,7,9,11,13]</text>
-          <rect x="320" y="80" width="50" height="40" fill="#FBBF24" opacity="0.4" rx="4" />
-          <text x="345" y="105" textAnchor="middle" fill="#78350F" fontWeight="bold">7</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Right</text>
-        </g>
-      )
+      desc: "Step 1: Compute mid = (low+high)//2, compare nums[mid] with target.",
+      image: "/images/problem 704/step2.png"
     },
     {
-      desc: "Step 2: Update left pointer. Now L = 4, R = 6. Mid = 5, nums[5] = 11 → search left.",
-      svg: (
-        <g>
-          <text x="400" y="100" textAnchor="middle" fill="var(--text-primary)" fontSize="24" fontFamily="monospace">nums = [1,3,5,7,9,11,13]</text>
-          <rect x="580" y="80" width="50" height="40" fill="#F87171" opacity="0.4" rx="4" />
-          <text x="605" y="105" textAnchor="middle" fill="#7F1D1D" fontWeight="bold">11</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Left</text>
-        </g>
-      )
+      desc: "Step 2: Adjust low/high based on comparison.",
+      image: "/images/problem 704/step3.png"
     },
     {
-      desc: "Step 3: Mid = 4, nums[4] = 9 → target found! Return 4.",
-      svg: (
-        <g>
-          <rect x="500" y="80" width="50" height="40" fill="#10B981" opacity="0.4" rx="4" />
-          <text x="525" y="105" textAnchor="middle" fill="white" fontWeight="bold">9</text>
-          <rect x="250" y="250" width="300" height="60" rx="30" fill="#10B981" />
-          <text x="400" y="288" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Result: 4</text>
-        </g>
-      )
+      desc: "Step 3: Repeat until low > high or target is found.",
+      image: "/images/problem 704/step4.png"
     }
   ],
   mistakes: [
     {
-      title: "Infinite loop due to mid calculation:",
-      text: "Always use mid = left + (right - left) / 2 to avoid overflow in languages like Java."
+      title: "Integer overflow when computing mid:",
+      text: "Instead of mid = (low + high)/2, use mid = low + (high - low)/2 to avoid overflow."
     },
     {
-      title: "Off-by-one errors:",
-      text: "Ensure left <= right in while loop. Using < instead can skip last element."
+      title: "Infinite loop due to wrong bounds update:",
+      text: "Ensure `low = mid + 1` or `high = mid - 1` when adjusting the search space."
     },
     {
-      title: "Confusing left/right updates:",
-      text: "When nums[mid] < target, move left = mid + 1; when nums[mid] > target, move right = mid - 1."
+      title: "Not handling empty array:",
+      text: "If the array is empty, return -1 immediately."
     },
     {
-      title: "Assuming unsorted array:",
-      text: "Binary search only works on sorted arrays. Always clarify this with interviewer."
+      title: "Assuming array is unsorted:",
+      text: "Binary search only works on sorted arrays."
     }
   ],
   related: [
     {
-      id: 35,
-      title: "Search Insert Position",
-      difficulty: "Easy",
+      id: 33,
+      title: "Search in Rotated Sorted Array",
+      difficulty: "Medium",
       tags: ["Array", "Binary Search"],
-      link: "/problem/search-insert-position"
+      link: "/problem/search-rotated-sorted-array"
+    },
+    {
+      id: 34,
+      title: "Find First and Last Position of Element in Sorted Array",
+      difficulty: "Medium",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/find-first-last-position"
     },
     {
       id: 278,
@@ -736,262 +564,259 @@ export const problemsData = {
       difficulty: "Easy",
       tags: ["Binary Search", "Interactive"],
       link: "/problem/first-bad-version"
-    },
-    {
-      id: 367,
-      title: "Valid Perfect Square",
-      difficulty: "Easy",
-      tags: ["Binary Search", "Math"],
-      link: "/problem/valid-perfect-square"
     }
   ],
   tips: [
     {
-      title: "Dry run example:",
-      text: "Walk through a small array like [1,3,5,7,9] and target=9 to explain pointer updates."
+      title: "Always verify boundaries:",
+      text: "Double-check low, high, and mid updates to avoid infinite loops."
     },
     {
-      title: "Explain edge cases:",
-      text: "Empty array, target smaller than all elements, target larger than all elements."
+      title: "Use iterative approach first:",
+      text: "Iterative binary search is less error-prone than recursive in interviews."
     },
     {
-      title: "Iterative vs recursive:",
-      text: "Iterative is simpler and avoids stack overhead; recursion is also acceptable."
+      title: "Visualize the array:",
+      text: "Draw the low, high, mid pointers and how they move to explain the process clearly."
+    },
+    {
+      title: "Check edge cases:",
+      text: "Empty array, target smaller than smallest element, target larger than largest element."
+    },
+    {
+      title: "Explain O(log n) reasoning:",
+      text: "Halving the array each step is what gives binary search its logarithmic time complexity."
     }
   ]
-},
-"find-minimum-in-rotated-sorted-array": {
+}
+,
+"find-min-rotated-sorted-array": {
   id: 153,
   title: "Find Minimum in Rotated Sorted Array",
   difficulty: "Medium",
-  acceptance: "47.2%",
-  submissions: "1.7M",
-  tags: ["Array", "Binary Search", "Divide and Conquer"],
-  description:
-    "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. Given the rotated array nums, return the minimum element. You must write an algorithm that runs in O(log n) time.",
+  acceptance: "44.1%",
+  submissions: "2.3M",
+  tags: ["Array", "Binary Search"],
+  description: "Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand. Find the minimum element in O(log n) time.",
   intuition: [
     {
-      title: "Identify the pivot:",
-      text: "The array is sorted but rotated. The smallest element is the pivot point where the rotation happened."
+      title: "Understand the problem:",
+      text: "We are given a rotated sorted array (e.g., [4,5,6,7,0,1,2]) and need to find the smallest element efficiently."
     },
     {
-      title: "Use binary search:",
-      text: "We can use binary search to locate the minimum. Compare middle element with rightmost element to determine which side contains the minimum."
+      title: "Key observation:",
+      text: "The array is partially sorted. The minimum element is the only element where the previous element is greater than it."
     },
     {
-      title: "Decision logic:",
-      text: "If nums[mid] > nums[right], the minimum is in the right half. Otherwise, it's in the left half (including mid)."
+      title: "Binary Search approach:",
+      text: "Use binary search: compare mid element with the rightmost element to decide which half to search next. The unsorted half contains the minimum."
     },
     {
-      title: "Edge cases:",
-      text: "Array not rotated at all (already sorted). Single element array."
+      title: "Termination condition:",
+      text: "When low == high, we have found the minimum element."
     }
   ],
   codeSnippets: {
-    java: `public int findMin(int[] nums) {
-    int left = 0, right = nums.length - 1;
-    while (left < right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] > nums[right]) left = mid + 1;
-        else right = mid;
-    }
-    return nums[left];
-}`,
-    python: `def findMin(nums: List[int]) -> int:
-    left, right = 0, len(nums) - 1
-    while left < right:
-        mid = left + (right - left) // 2
-        if nums[mid] > nums[right]:
-            left = mid + 1
-        else:
-            right = mid
-    return nums[left]`
+    java: "public int findMin(int[] nums) {\n    int low = 0, high = nums.length - 1;\n    while (low < high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] > nums[high]) low = mid + 1;\n        else high = mid;\n    }\n    return nums[low];\n}",
+    python: "def findMin(nums):\n    low, high = 0, len(nums) - 1\n    while low < high:\n        mid = (low + high) // 2\n        if nums[mid] > nums[high]:\n            low = mid + 1\n        else:\n            high = mid\n    return nums[low]"
   },
   complexity: {
-    time: { value: "O(log n)", explanation: "Binary search halves the array each iteration." },
-    space: { value: "O(1)", explanation: "Constant space used." }
+    time: {
+      value: "O(log n)",
+      explanation: "Binary search halves the search space each iteration."
+    },
+    space: {
+      value: "O(1)",
+      explanation: "Only constant extra space is used."
+    }
   },
   visualSteps: [
     {
-      desc: "Initial Array: nums = [4,5,6,7,0,1,2]",
-      svg: (
-        <g>
-          <text x="400" y="100" textAnchor="middle" fill="var(--text-primary)" fontSize="24" fontFamily="monospace">[4,5,6,7,0,1,2]</text>
-          <text x="100" y="140" fill="#3B82F6" fontWeight="bold">L</text>
-          <text x="700" y="140" fill="#EF4444" fontWeight="bold">R</text>
-        </g>
-      )
+      desc: "Initialize: low = 0, high = length-1.",
+      image: "/images/problem 153/step1.png"
     },
     {
-      desc: "Check mid = 6 (nums[3]=7) > nums[right]=2 → min in right half.",
-      svg: (
-        <g>
-          <rect x="300" y="80" width="50" height="40" fill="#FBBF24" opacity="0.4" rx="4" />
-          <text x="325" y="105" textAnchor="middle" fill="#78350F" fontWeight="bold">7</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Right</text>
-        </g>
-      )
+      desc: "Compare mid with high to decide which half contains the minimum.",
+      image: "/images/problem 153/step2.png"
     },
     {
-      desc: "Continue search: left=4, right=6, mid=5 → nums[5]=1 ≤ nums[right]=2 → min in left half.",
-      svg: (
-        <g>
-          <rect x="520" y="80" width="50" height="40" fill="#D1FAE5" opacity="0.4" rx="4" />
-          <text x="545" y="105" textAnchor="middle" fill="#064E3B" fontWeight="bold">1</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Left</text>
-        </g>
-      )
+      desc: "Adjust low/high accordingly.",
+      image: "/images/problem 153/step3.png"
     },
     {
-      desc: "Found minimum: nums[4]=0",
-      svg: (
-        <g>
-          <rect x="460" y="250" width="300" height="60" rx="30" fill="#10B981" />
-          <text x="610" y="288" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Result: 0</text>
-        </g>
-      )
+      desc: "Repeat until low == high → minimum found.",
+      image: "/images/problem 153/step4.png"
     }
   ],
   mistakes: [
-    { title: "Using full linear scan", text: "Binary search is required for O(log n) time." },
-    { title: "Mid comparison logic", text: "Compare nums[mid] with nums[right], not nums[left]." },
-    { title: "Off-by-one errors", text: "Use while(left < right) instead of <= to avoid infinite loop." },
-    { title: "Edge cases", text: "Single element or already sorted array must return nums[0]." }
+    {
+      title: "Using nums[mid] > nums[low] incorrectly:",
+      text: "Always compare with nums[high] to identify the unsorted half containing the minimum."
+    },
+    {
+      title: "Not handling already sorted array:",
+      text: "If the array is not rotated, the first element is the minimum."
+    },
+    {
+      title: "Incorrect termination:",
+      text: "Loop should continue while low < high, not <=."
+    }
   ],
   related: [
-    { id: 33, title: "Search in Rotated Sorted Array", difficulty: "Medium", tags: ["Array", "Binary Search"], link: "/problem/search-rotated-array" },
-    { id: 81, title: "Search in Rotated Sorted Array II", difficulty: "Medium", tags: ["Array", "Binary Search"], link: "/problem/search-rotated-array-ii" }
+    {
+      id: 33,
+      title: "Search in Rotated Sorted Array",
+      difficulty: "Medium",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/search-rotated-sorted-array"
+    },
+    {
+      id: 153,
+      title: "Find Minimum in Rotated Sorted Array",
+      difficulty: "Medium",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/find-min-rotated-sorted-array"
+    },
+    {
+      id: 154,
+      title: "Find Minimum in Rotated Sorted Array II",
+      difficulty: "Hard",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/find-min-rotated-sorted-array-ii"
+    }
   ],
   tips: [
-    { title: "Explain why mid vs right", text: "Compare middle with right to decide which half contains the minimum." },
-    { title: "Dry run", text: "Use small arrays like [3,4,5,1,2] to illustrate the binary search process." },
-    { title: "Avoid linear scan", text: "Emphasize O(log n) solution to interviewers." }
+    {
+      title: "Always compare mid with rightmost element:",
+      text: "This identifies the unsorted half containing the minimum efficiently."
+    },
+    {
+      title: "Consider edge cases:",
+      text: "Arrays with only one element or arrays not rotated."
+    },
+    {
+      title: "Draw the array visually:",
+      text: "Mark low, mid, high pointers to see which half is sorted and which is unsorted."
+    }
   ]
-},
-"search-in-rotated-sorted-array": { 
+}
+,
+"search-rotated-sorted-array": {
   id: 33,
   title: "Search in Rotated Sorted Array",
   difficulty: "Medium",
-  acceptance: "44.7%",
-  submissions: "2.3M",
-  tags: ["Array", "Binary Search", "Divide and Conquer"],
-  description:
-    "Given a rotated sorted array nums and an integer target, return its index if it exists, otherwise return -1. You must write an algorithm with O(log n) runtime complexity.",
+  acceptance: "43.2%",
+  submissions: "3.2M",
+  tags: ["Array", "Binary Search"],
+  description: "Given a rotated sorted array `nums` and a target value, return its index if it exists. Otherwise, return -1. Must achieve O(log n) runtime.",
   intuition: [
     {
-      title: "Identify sorted half",
-      text: "At least one half (left or right) of the array is sorted in any rotated array."
+      title: "Understand the problem:",
+      text: "We need to find a target in a rotated sorted array efficiently using binary search."
     },
     {
-      title: "Binary search with rotation",
-      text: "Check which half is sorted, then decide whether to search left or right."
+      title: "Key observation:",
+      text: "At least one half of the array (left or right of mid) is always sorted."
     },
     {
-      title: "Decision logic",
-      text: "If target lies in the sorted half, narrow search to that half; otherwise search the other half."
+      title: "Binary Search approach:",
+      text: "Check which half is sorted. If the target is within the sorted half, search there; otherwise, search the other half."
     },
     {
-      title: "Edge cases",
-      text: "Target not present, single element array, duplicates if allowed."
+      title: "Termination condition:",
+      text: "If mid matches the target, return mid. Repeat until low > high."
     }
   ],
   codeSnippets: {
-    java: `public int search(int[] nums, int target) {
-    int left = 0, right = nums.length - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        if (nums[mid] == target) return mid;
-
-        if (nums[left] <= nums[mid]) { // Left half sorted
-            if (nums[left] <= target && target < nums[mid]) right = mid - 1;
-            else left = mid + 1;
-        } else { // Right half sorted
-            if (nums[mid] < target && target <= nums[right]) left = mid + 1;
-            else right = mid - 1;
-        }
-    }
-    return -1;
-}`,
-    python: `def search(nums: List[int], target: int) -> int:
-    left, right = 0, len(nums) - 1
-    while left <= right:
-        mid = left + (right - left) // 2
-        if nums[mid] == target:
-            return mid
-        if nums[left] <= nums[mid]:
-            if nums[left] <= target < nums[mid]:
-                right = mid - 1
-            else:
-                left = mid + 1
-        else:
-            if nums[mid] < target <= nums[right]:
-                left = mid + 1
-            else:
-                right = mid - 1
-    return -1`
+    java: "public int search(int[] nums, int target) {\n    int low = 0, high = nums.length - 1;\n    while (low <= high) {\n        int mid = low + (high - low) / 2;\n        if (nums[mid] == target) return mid;\n\n        if (nums[low] <= nums[mid]) {\n            if (target >= nums[low] && target < nums[mid]) high = mid - 1;\n            else low = mid + 1;\n        } else {\n            if (target > nums[mid] && target <= nums[high]) low = mid + 1;\n            else high = mid - 1;\n        }\n    }\n    return -1;\n}",
+    python: "def search(nums, target):\n    low, high = 0, len(nums) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if nums[mid] == target:\n            return mid\n\n        if nums[low] <= nums[mid]:\n            if nums[low] <= target < nums[mid]:\n                high = mid - 1\n            else:\n                low = mid + 1\n        else:\n            if nums[mid] < target <= nums[high]:\n                low = mid + 1\n            else:\n                high = mid - 1\n    return -1"
   },
   complexity: {
-    time: { value: "O(log n)", explanation: "Binary search halves the search space each step." },
-    space: { value: "O(1)", explanation: "Iterative solution uses constant space." }
+    time: {
+      value: "O(log n)",
+      explanation: "Binary search halves the search space at each step."
+    },
+    space: {
+      value: "O(1)",
+      explanation: "Iterative implementation uses constant extra space."
+    }
   },
   visualSteps: [
     {
-      desc: "Initial Array: nums = [4,5,6,7,0,1,2], target=0",
-      svg: (
-        <g>
-          <text x="400" y="100" textAnchor="middle" fill="var(--text-primary)" fontSize="24" fontFamily="monospace">[4,5,6,7,0,1,2]</text>
-          <text x="100" y="140" fill="#3B82F6" fontWeight="bold">L</text>
-          <text x="700" y="140" fill="#EF4444" fontWeight="bold">R</text>
-        </g>
-      )
+      desc: "Initialize: low = 0, high = length-1.",
+      image: "/images/search-rotated-step1.jpeg"
     },
     {
-      desc: "Mid = 6 (nums[3]=7). Left half sorted. Target 0 not in [4..7] → search right half.",
-      svg: (
-        <g>
-          <rect x="320" y="80" width="50" height="40" fill="#FBBF24" opacity="0.4" rx="4" />
-          <text x="345" y="105" textAnchor="middle" fill="#78350F" fontWeight="bold">7</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Right</text>
-        </g>
-      )
+      desc: "Check mid element and compare with target.",
+      image: "/images/search-rotated-step2.jpeg"
     },
     {
-      desc: "New search: left=4, right=6, mid=5 → nums[5]=1. Right half sorted. Target 0 in left? yes → search left.",
-      svg: (
-        <g>
-          <rect x="560" y="80" width="50" height="40" fill="#D1FAE5" opacity="0.4" rx="4" />
-          <text x="585" y="105" textAnchor="middle" fill="#064E3B" fontWeight="bold">1</text>
-          <text x="400" y="160" fill="#10B981" fontWeight="bold">Searching Left</text>
-        </g>
-      )
+      desc: "Determine which half is sorted and narrow search accordingly.",
+      image: "/images/search-rotated-step3.jpeg"
     },
     {
-      desc: "Found target: nums[4]=0 → return index 4",
-      svg: (
-        <g>
-          <rect x="460" y="250" width="300" height="60" rx="30" fill="#10B981" />
-          <text x="610" y="288" textAnchor="middle" fill="white" fontSize="18" fontWeight="bold">Result: 4</text>
-        </g>
-      )
+      desc: "Repeat until target is found or low > high.",
+      image: "/images/search-rotated-step4.jpeg"
     }
   ],
   mistakes: [
-    { title: "Not checking which half is sorted", text: "You must first identify the sorted half each step." },
-    { title: "Off-by-one errors", text: "Use while(left <= right) to ensure last element is checked." },
-    { title: "Assuming full array sorted", text: "Rotated array is partially sorted; normal binary search won't work." },
-    { title: "Edge cases", text: "Empty array or single element arrays must be handled." }
+    {
+      title: "Not identifying the sorted half correctly:",
+      text: "Always check if left <= mid or mid <= right to determine the sorted half."
+    },
+    {
+      title: "Incorrect comparison with boundaries:",
+      text: "Ensure target is compared correctly with low/mid/high when deciding which half to search."
+    },
+    {
+      title: "Infinite loop due to wrong bounds update:",
+      text: "Update low = mid+1 or high = mid-1 properly based on the target location."
+    }
   ],
   related: [
-    { id: 153, title: "Find Minimum in Rotated Sorted Array", difficulty: "Medium", tags: ["Array", "Binary Search"], link: "/problem/find-min-rotated" },
-    { id: 81, title: "Search in Rotated Sorted Array II", difficulty: "Medium", tags: ["Array", "Binary Search"], link: "/problem/search-rotated-array-ii" }
+    {
+      id: 153,
+      title: "Find Minimum in Rotated Sorted Array",
+      difficulty: "Medium",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/find-min-rotated-sorted-array"
+    },
+    {
+      id: 81,
+      title: "Search in Rotated Sorted Array II",
+      difficulty: "Medium",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/search-rotated-sorted-array-ii"
+    },
+    {
+      id: 35,
+      title: "Search Insert Position",
+      difficulty: "Easy",
+      tags: ["Array", "Binary Search"],
+      link: "/problem/search-insert-position"
+    }
   ],
   tips: [
-    { title: "Explain sorted half check", text: "Always show interviewer how you identify which side is sorted." },
-    { title: "Dry run examples", text: "Use arrays like [4,5,6,7,0,1,2] and [6,7,0,1,2,4,5] for explanation." },
-    { title: "Iterative preferred", text: "Iterative binary search avoids recursion overhead." }
+    {
+      title: "Always identify the sorted half first:",
+      text: "This is key to reducing the search space efficiently."
+    },
+    {
+      title: "Check if target lies in sorted half:",
+      text: "If yes, continue binary search there; otherwise, search the other half."
+    },
+    {
+      title: "Edge cases:",
+      text: "Arrays with one element, not rotated, or all duplicates should be considered."
+    },
+    {
+      title: "Visualize the array with low, mid, high pointers:",
+      text: "Drawing helps explain your logic during an interview."
+    }
   ]
 }
-   "validate-binary-search-tree": {
+,
+"validate Binary Search Tree": {
         id: 98,
         title: "Validate Binary Search Tree",
         difficulty: "Medium",
