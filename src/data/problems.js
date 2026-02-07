@@ -2981,6 +2981,580 @@ public:
         link: "/problem/minimum-size-subarray-sum"
       }
     ]
+"binary-tree-inorder-traversal": {
+        id: 94,
+        title: "Binary Tree Inorder Traversal",
+        difficulty: "Easy",
+        acceptance: "79.6%",
+        submissions: "4.5M",
+        tags: ["Tree", "DFS", "Stack", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, return the <em>inorder traversal</em> of its nodes' values.</p>",
+        intuition: [
+            {
+                title: "Depth First Search",
+                text: "Inorder traversal is a depth-first approach where we visit nodes in the order: Left → Root → Right."
+            },
+            {
+                title: "Recursion vs Iteration",
+                text: "The recursive solution is straightforward. For iteration, we use a Stack to simulate the recursive call stack, delaying the processing of the root until the left subtree is finished."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def inorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res = []\n        def dfs(node):\n            if not node: return\n            dfs(node.left)\n            res.append(node.val)\n            dfs(node.right)\n        dfs(root)\n        return res`,
+            java: `class Solution {\n    public List<Integer> inorderTraversal(TreeNode root) {\n        List<Integer> res = new ArrayList<>();\n        helper(root, res);\n        return res;\n    }\n    private void helper(TreeNode node, List<Integer> res) {\n        if (node == null) return;\n        helper(node.left, res);\n        res.add(node.val);\n        helper(node.right, res);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    vector<int> inorderTraversal(TreeNode* root) {\n        vector<int> res;\n        dfs(root, res);\n        return res;\n    }\n    void dfs(TreeNode* node, vector<int>& res) {\n        if (!node) return;\n        dfs(node->left, res);\n        res.push_back(node->val);\n        dfs(node->right, res);\n    }\n};`,
+            javascript: `var inorderTraversal = function(root) {\n    const res = [];\n    const dfs = (node) => {\n        if (!node) return;\n        dfs(node.left);\n        res.push(node.val);\n        dfs(node.right);\n    };\n    dfs(root);\n    return res;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "We visit every node exactly once." },
+            space: { value: "O(H)", explanation: "O(N) in worst case (skewed tree), O(log N) on average (balanced) for stack." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial State: Start at Root (1). Output empty.",
+                svg: (
+                    <g>
+                        {/* Edges */}
+                        <line x1="400" y1="50" x2="250" y2="120" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="400" y1="50" x2="550" y2="120" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="120" x2="175" y2="200" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="250" y1="120" x2="325" y2="200" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="550" y1="120" x2="625" y2="200" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="325" y1="200" x2="285" y2="280" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="325" y1="200" x2="365" y2="280" stroke="#9CA3AF" strokeWidth="2" />
+                        <line x1="625" y1="200" x2="585" y2="280" stroke="#9CA3AF" strokeWidth="2" />
+
+                        {/* Nodes */}
+                        <circle cx="400" cy="50" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="250" cy="120" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="550" cy="120" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="550" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <circle cx="175" cy="200" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="175" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="325" cy="200" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="325" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                        <circle cx="625" cy="200" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="625" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">8</text>
+                        <circle cx="285" cy="280" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="285" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="365" cy="280" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="365" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">7</text>
+                        <circle cx="585" cy="280" r="20" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="585" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">9</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Traverse Left 1 → 2 → 4.",
+                svg: (
+                    <g>
+                        <line x1="400" y1="50" x2="250" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <line x1="250" y1="120" x2="175" y2="200" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="250" cy="120" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="175" cy="200" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="175" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Visit 4 (Leaf). Output: [4].",
+                svg: (
+                    <g>
+                        <circle cx="175" cy="200" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="175" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Backtrack to 2. Visit 2. Output: [4, 2].",
+                svg: (
+                    <g>
+                        <line x1="250" y1="120" x2="175" y2="200" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="175" cy="200" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="175" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="250" cy="120" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Traverse Right to 5, then Left to 6.",
+                svg: (
+                    <g>
+                        <line x1="250" y1="120" x2="325" y2="200" stroke="#F59E0B" strokeWidth="3" />
+                        <line x1="325" y1="200" x2="285" y2="280" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="250" cy="120" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="325" cy="200" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="325" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                        <circle cx="285" cy="280" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="285" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Visit 6 (Leaf). Output: [4, 2, 6].",
+                svg: (
+                    <g>
+                        <circle cx="285" cy="280" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="285" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Backtrack to 5. Visit 5. Output: [..., 6, 5].",
+                svg: (
+                    <g>
+                        <line x1="325" y1="200" x2="285" y2="280" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="285" cy="280" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="285" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="325" cy="200" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="325" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Sorted Output", text: "Inorder traversal of a BST yields values in sorted order." },
+            { title: "Iterative Stack", text: "Be comfortable implementing the stack-based iterative approach." },
+            { title: "Morris Traversal", text: "Learn Morris Traversal for O(1) space complexity." }
+        ],
+        mistakes: [
+            { title: "Logic Error", text: "In iterative, push ALL left children before popping." },
+            { title: "Null Checks", text: "Always check for null root handlers." }
+        ],
+        related: [
+            { id: 144, title: "Binary Tree Preorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 145, title: "Binary Tree Postorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 102, title: "Binary Tree Level Order Traversal", difficulty: "Medium", tags: ["Tree", "BFS"] }
+        ]
+    },
+    "binary-tree-right-side-view": {
+        id: 199,
+        title: "Binary Tree Right Side View",
+        difficulty: "Medium",
+        acceptance: "69.3%",
+        submissions: "3.1M",
+        tags: ["Tree", "DFS", "BFS", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, imagine yourself standing on the <strong>right side</strong> of it, return the values of the nodes you can see ordered from top to bottom.</p>",
+        intuition: [
+            { title: "Reverse Preorder DFS", text: "Traverse Root → Right → Left." },
+            { title: "Depth Tracking", text: "The first node visited at each depth is the rightmost one." }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def rightSideView(self, root: Optional[TreeNode]) -> List[int]:\n        res = []\n        def dfs(node, depth):\n            if not node: return\n            if depth == len(res):\n                res.append(node.val)\n            dfs(node.right, depth + 1)\n            dfs(node.left, depth + 1)\n        dfs(root, 0)\n        return res`,
+            java: `class Solution {\n    public List<Integer> rightSideView(TreeNode root) {\n        List<Integer> res = new ArrayList<>();\n        dfs(root, 0, res);\n        return res;\n    }\n    private void dfs(TreeNode node, int depth, List<Integer> res) {\n        if (node == null) return;\n        if (depth == res.size()) res.add(node.val);\n        dfs(node.right, depth + 1, res);\n        dfs(node.left, depth + 1, res);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    vector<int> rightSideView(TreeNode* root) {\n        vector<int> res;\n        dfs(root, 0, res);\n        return res;\n    }\n    void dfs(TreeNode* node, int depth, vector<int>& res) {\n        if (!node) return;\n        if (depth == res.size()) res.push_back(node->val);\n        dfs(node->right, depth + 1, res);\n        dfs(node->left, depth + 1, res);\n    }\n};`,
+            javascript: `var rightSideView = function(root) {\n    const res = [];\n    const dfs = (node, depth) => {\n        if (!node) return;\n        if (depth === res.length) res.push(node.val);\n        dfs(node.right, depth + 1);\n        dfs(node.left, depth + 1);\n    };\n    dfs(root, 0);\n    return res;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "Every node is visited once." },
+            space: { value: "O(H)", explanation: "Recursion stack depth." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial State: Start at Root (1). Result: [].",
+                svg: (
+                    <g>
+                        <rect x="0" y="0" width="800" height="400" fill="transparent" />
+                    </g>
+                )
+            },
+            {
+                desc: "Visit 1. Depth 0 (First). Add 1.",
+                svg: (
+                    <g>
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <line x1="700" y1="50" x2="440" y2="50" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                    </g>
+                )
+            },
+            {
+                desc: "Go Right to 3. Depth 1 (First). Add 3.",
+                svg: (
+                    <g>
+                        <line x1="400" y1="50" x2="550" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="550" cy="120" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="550" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                        <line x1="700" y1="50" x2="440" y2="50" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="120" x2="590" y2="120" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                    </g>
+                )
+            },
+            {
+                desc: "Backtrack 3->1. Go Left to 2. Depth 1 (Seen 3). Skipped.",
+                svg: (
+                    <g>
+                        <line x1="400" y1="50" x2="250" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="250" cy="120" r="24" fill="#6B7280" stroke="#EF4444" strokeWidth="3" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <line x1="700" y1="50" x2="440" y2="50" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="120" x2="590" y2="120" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                    </g>
+                )
+            },
+            {
+                desc: "Go Left to 4. Depth 2 (First). Add 4.",
+                svg: (
+                    <g>
+                        <line x1="250" y1="120" x2="180" y2="200" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="250" cy="120" r="24" fill="#6B7280" stroke="white" strokeWidth="2" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="180" cy="200" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="180" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <line x1="700" y1="50" x2="440" y2="50" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="120" x2="590" y2="120" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="200" x2="220" y2="200" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                    </g>
+                )
+            },
+            {
+                desc: "Go Left to 5. Depth 3 (First). Add 5.",
+                svg: (
+                    <g>
+                        <line x1="180" y1="200" x2="110" y2="280" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="180" cy="200" r="24" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="180" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">4</text>
+                        <circle cx="110" cy="280" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="110" y="285" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">5</text>
+                        <line x1="700" y1="50" x2="440" y2="50" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="120" x2="590" y2="120" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="200" x2="220" y2="200" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                        <line x1="700" y1="280" x2="150" y2="280" stroke="#8B5CF6" strokeWidth="2" markerEnd="url(#view-arrow)" opacity="1" />
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "BFS vs DFS", text: "BFS is intuitive, but DFS (Right-First) is space-efficient." },
+            { title: "Traversal Order", text: "Right before Left ensures first node at depth is rightmost." },
+            { title: "Depth Tracking", text: "Compare current depth with result list size." }
+        ],
+        mistakes: [
+            { title: "Right View != Right Subtree", text: "Don't just traverse right pointers. View includes left children if right is missing." },
+            { title: "First vs Last", text: "In Right-to-Left DFS, it's the first node at each depth." }
+        ],
+        related: [
+            { id: 116, title: "Populating Next Right Pointers", difficulty: "Medium", tags: ["Tree", "BFS"] },
+            { id: 104, title: "Maximum Depth of Binary Tree", difficulty: "Easy", tags: ["Tree", "DFS"] },
+            { id: 102, title: "Binary Tree Level Order Traversal", difficulty: "Medium", tags: ["Tree", "BFS"] }
+        ]
+    },
+    "binary-tree-preorder-traversal": {
+        id: 144,
+        title: "Binary Tree Preorder Traversal",
+        difficulty: "Easy",
+        acceptance: "75.0%",
+        submissions: "3.1M",
+        tags: ["Tree", "DFS", "Stack", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, return the preorder traversal of its nodes' values.</p>",
+        intuition: [
+            { title: "Root First", text: "Preorder follows: Root → Left → Right." },
+            { title: "Stack Order", text: "Push Right child first, then Left child, so Left is popped first." }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def preorderTraversal(self, root: Optional[TreeNode]) -> List[int]:\n        res = []\n        def dfs(node):\n            if not node: return\n            res.append(node.val)\n            dfs(node.left)\n            dfs(node.right)\n        dfs(root)\n        return res`,
+            java: `class Solution {\n    public List<Integer> preorderTraversal(TreeNode root) {\n        List<Integer> res = new ArrayList<>();\n        helper(root, res);\n        return res;\n    }\n    private void helper(TreeNode node, List<Integer> res) {\n        if (node == null) return;\n        res.add(node.val);\n        helper(node.left, res);\n        helper(node.right, res);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    vector<int> preorderTraversal(TreeNode* root) {\n        vector<int> res;\n        dfs(root, res);\n        return res;\n    }\n    void dfs(TreeNode* node, vector<int>& res) {\n        if (!node) return;\n        res.push_back(node->val);\n        dfs(node->left, res);\n        dfs(node->right, res);\n    }\n}`,
+            javascript: `var preorderTraversal = function(root) {\n    const res = [];\n    const dfs = (node) => {\n        if (!node) return;\n        res.push(node.val);\n        dfs(node.left);\n        dfs(node.right);\n    };\n    dfs(root);\n    return res;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "Visit every node once." },
+            space: { value: "O(N)", explanation: "Worst case stack size." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial State: Root is 1. Stack empty.",
+                svg: (
+                    <g>
+                        <rect x="0" y="0" width="800" height="400" fill="transparent" />
+                    </g>
+                )
+            },
+            {
+                desc: "Push Root (1). Pop 1. Output: [1]. Push Right(8), Left(2). Stack: [8, 2].",
+                svg: (
+                    <g>
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Pop 2. Output: [1, 2]. Push Right(5), Left(3). Stack: [8, 5, 3].",
+                svg: (
+                    <g>
+                        <line x1="400" y1="50" x2="250" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="250" cy="120" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Pop 3. Output: [1, 2, 3]. Push Left(4). Stack: [8, 5, 4].",
+                svg: (
+                    <g>
+                        <line x1="250" y1="120" x2="175" y2="200" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">1</text>
+                        <circle cx="250" cy="120" r="24" fill="#3B82F6" stroke="#10B981" strokeWidth="3" />
+                        <text x="250" y="125" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">2</text>
+                        <circle cx="175" cy="200" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="175" y="205" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">3</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Iterative vs Recursive", text: "Be prepared to implement both." },
+            { title: "Morris Traversal", text: "Optimize for O(1) space." }
+        ],
+        mistakes: [
+            { title: "Stack Push Order", text: "Push Right then Left so Left is popped first." },
+            { title: "Null Checks", text: "Do not push null children onto the stack." }
+        ],
+        related: [
+            { id: 94, title: "Binary Tree Inorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 145, title: "Binary Tree Postorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 102, title: "Binary Tree Level Order Traversal", difficulty: "Medium", tags: ["Tree", "BFS"] }
+        ]
+    },
+    "lowest-common-ancestor-of-a-binary-search-tree": {
+        id: 235,
+        title: "Lowest Common Ancestor of a Binary Search Tree",
+        difficulty: "Medium",
+        acceptance: "70.0%",
+        submissions: "3.1M",
+        tags: ["Tree", "DFS", "Binary Search Tree", "Binary Tree"],
+        description: "<p>Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.</p>",
+        intuition: [
+            { title: "BST Property", text: "Left < Root < Right." },
+            { title: "Split Point", text: "If p and q are on different sides of the current node, the current node is the LCA." }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':\n        curr = root\n        while curr:\n            if p.val > curr.val and q.val > curr.val:\n                curr = curr.right\n            elif p.val < curr.val and q.val < curr.val:\n                curr = curr.left\n            else:\n                return curr`,
+            java: `class Solution {\n    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {\n        while (root != null) {\n            if (p.val > root.val && q.val > root.val) root = root.right;\n            else if (p.val < root.val && q.val < root.val) root = root.left;\n            else return root;\n        }\n        return null;\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        while (true) {\n            if (p->val > root->val && q->val > root->val) root = root->right;\n            else if (p->val < root->val && q->val < root->val) root = root->left;\n            else return root;\n        }\n    }\n}`,
+            javascript: `var lowestCommonAncestor = function(root, p, q) {\n    while (root) {\n        if (p.val > root.val && q.val > root.val) root = root.right;\n        else if (p.val < root.val && q.val < root.val) root = root.left;\n        else return root;\n    }\n};`
+        },
+        complexity: {
+            time: { value: "O(H)", explanation: "Height of the tree (log N for balanced)." },
+            space: { value: "O(1)", explanation: "Iterative approach uses constant space." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial State: p=2, q=8. Start at Root (6).",
+                svg: (
+                    <g>
+                        <rect x="0" y="0" width="800" height="400" fill="transparent" />
+                        <circle cx="250" cy="120" r="24" fill="none" stroke="#6366F1" strokeWidth="3" strokeDasharray="4 2" />
+                        <circle cx="550" cy="120" r="24" fill="none" stroke="#6366F1" strokeWidth="3" strokeDasharray="4 2" />
+                    </g>
+                )
+            },
+            {
+                desc: "Current Node: 6. Compare with p(2) and q(8).",
+                svg: (
+                    <g>
+                        <circle cx="400" cy="50" r="24" fill="#3B82F6" stroke="#F59E0B" strokeWidth="3" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                        <circle cx="250" cy="120" r="24" fill="none" stroke="#6366F1" strokeWidth="3" strokeDasharray="4 2" />
+                        <circle cx="550" cy="120" r="24" fill="none" stroke="#6366F1" strokeWidth="3" strokeDasharray="4 2" />
+                    </g>
+                )
+            },
+            {
+                desc: "p(2) < 6 and q(8) > 6. Paths split. 6 is LCA.",
+                svg: (
+                    <g>
+                        <line x1="400" y1="50" x2="250" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <line x1="400" y1="50" x2="550" y2="120" stroke="#F59E0B" strokeWidth="3" />
+                        <circle cx="400" cy="50" r="24" fill="#10B981" stroke="white" strokeWidth="2" />
+                        <text x="400" y="55" textAnchor="middle" fill="white" fontWeight="600" fontSize="14">6</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Sorted Output", text: "BST Inorder is sorted." },
+            { title: "Iterative Approach", text: "Space optimization via iteration." }
+        ],
+        mistakes: [
+            { title: "Wrong Return", text: "Return the node, not the value." }
+        ],
+        related: [
+            { id: 144, title: "Binary Tree Preorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 145, title: "Binary Tree Postorder Traversal", difficulty: "Easy", tags: ["Tree", "DFS", "Stack"] },
+            { id: 102, title: "Binary Tree Level Order Traversal", difficulty: "Medium", tags: ["Tree", "BFS"] }
+        ]
+    },
+    "diameter-of-binary-tree": {
+        id: 543,
+        title: "Diameter of Binary Tree",
+        difficulty: "Easy",
+        acceptance: "61.3%",
+        submissions: "4M+",
+        tags: ["Tree", "DFS", "Binary Tree"],
+        description: "<p>Given the root of a binary tree, return the length of the **diameter** of the tree.</p><p>The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.</p>",
+        intuition: [
+            {
+                title: "Height Calculation",
+                text: "For every node, the longest path passing through it is: height(left) + height(right)."
+            },
+            {
+                title: "Global Max",
+                text: "We compute heights bottom-up. At each node, we update a global 'diameter' variable if the path through the current node is longer than what we've seen so far."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:\n    def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:\n        self.diameter = 0\n        def height(node):\n            if not node: return 0\n            left = height(node.left)\n            right = height(node.right)\n            self.diameter = max(self.diameter, left + right)\n            return 1 + max(left, right)\n        height(root)\n        return self.diameter`,
+            java: `class Solution {\n    int diameter = 0;\n    public int diameterOfBinaryTree(TreeNode root) {\n        height(root);\n        return diameter;\n    }\n    private int height(TreeNode node) {\n        if (node == null) return 0;\n        int left = height(node.left);\n        int right = height(node.right);\n        diameter = Math.max(diameter, left + right);\n        return 1 + Math.max(left, right);\n    }\n}`,
+            cpp: `class Solution {\npublic:\n    int diameter = 0;\n    int diameterOfBinaryTree(TreeNode* root) {\n        height(root);\n        return diameter;\n    }\n    int height(TreeNode* node) {\n        if (!node) return 0;\n        int left = height(node->left);\n        int right = height(node->right);\n        diameter = max(diameter, left + right);\n        return 1 + max(left, right);\n    }\n}`,
+            javascript: `var diameterOfBinaryTree = function(root) {\n    let diameter = 0;\n    const height = (node) => {\n        if (!node) return 0;\n        const left = height(node.left);\n        const right = height(node.right);\n        diameter = Math.max(diameter, left + right);\n        return 1 + Math.max(left, right);\n    };\n    height(root);\n    return diameter;\n};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "We visit every node exactly once." },
+            space: { value: "O(H)", explanation: "O(N) worst case (skewed), O(log N) average (balanced) due to recursion stack." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial: Tree [1,2,3,4,5]. Diameter = 0.",
+                svg: (
+                    <g>
+                        <text x="400" y="340" textAnchor="middle" fill="#6B7280" fontSize="14">Tree: [1,2,3,4,5] - Finding the longest path</text>
+                    </g>
+                )
+            },
+            {
+                desc: "DFS visits node 4 (leaf). Height = 0. Returns 1.",
+                svg: (
+                    <g>
+                        <circle cx="150" cy="250" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="150" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">4</text>
+                        <text x="150" y="300" textAnchor="middle" fill="#10B981" fontSize="12">h=0</text>
+                    </g>
+                )
+            },
+            {
+                desc: "DFS visits node 5 (leaf). Height = 0. Returns 1.",
+                svg: (
+                    <g>
+                        <circle cx="350" cy="250" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="350" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">5</text>
+                        <text x="350" y="300" textAnchor="middle" fill="#10B981" fontSize="12">h=0</text>
+                    </g>
+                )
+            },
+            {
+                desc: "At node 2: left_h=1, right_h=1. Diameter = max(0, 1+1) = 2.",
+                svg: (
+                    <g>
+                        {/* Lines stopping at circle edges (r=28) */}
+                        <line x1="230" y1="170" x2="170" y2="230" stroke="#F59E0B" strokeWidth="4" />
+                        <line x1="270" y1="170" x2="330" y2="230" stroke="#F59E0B" strokeWidth="4" />
+                        {/* Child nodes */}
+                        <circle cx="150" cy="250" r="28" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="150" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">4</text>
+                        <circle cx="350" cy="250" r="28" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="350" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">5</text>
+                        {/* Current node highlighted */}
+                        <circle cx="250" cy="150" r="28" fill="#F59E0B" stroke="white" strokeWidth="3" />
+                        <text x="250" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">2</text>
+                        <text x="250" y="200" textAnchor="middle" fill="#F59E0B" fontSize="12">left=1, right=1</text>
+                        <text x="250" y="220" textAnchor="middle" fill="#F59E0B" fontSize="12" fontWeight="600">diameter=2</text>
+                    </g>
+                )
+            },
+            {
+                desc: "DFS visits node 3 (leaf). Height = 0. Returns 1.",
+                svg: (
+                    <g>
+                        <circle cx="550" cy="150" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="550" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">3</text>
+                        <text x="550" y="200" textAnchor="middle" fill="#10B981" fontSize="12">h=0</text>
+                    </g>
+                )
+            },
+            {
+                desc: "At node 1: left_h=2, right_h=1. Diameter = max(2, 2+1) = 3.",
+                svg: (
+                    <g>
+                        {/* Lines stopping at circle edges (r=28) */}
+                        <line x1="376" y1="74" x2="274" y2="136" stroke="#F59E0B" strokeWidth="4" />
+                        <line x1="424" y1="74" x2="526" y2="136" stroke="#F59E0B" strokeWidth="4" />
+                        {/* Child nodes */}
+                        <circle cx="250" cy="150" r="28" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="250" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">2</text>
+                        <circle cx="550" cy="150" r="28" fill="#3B82F6" stroke="white" strokeWidth="2" />
+                        <text x="550" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">3</text>
+                        {/* Current node highlighted */}
+                        <circle cx="400" cy="60" r="28" fill="#F59E0B" stroke="white" strokeWidth="3" />
+                        <text x="400" y="67" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">1</text>
+                        <text x="400" y="110" textAnchor="middle" fill="#F59E0B" fontSize="12">left=2, right=1</text>
+                        <text x="400" y="130" textAnchor="middle" fill="#F59E0B" fontSize="12" fontWeight="600">diameter=3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Final: Diameter = 3 (path 4→2→1→3 has 3 edges).",
+                svg: (
+                    <g>
+                        {/* Thick green lines showing the longest path */}
+                        <line x1="170" y1="230" x2="230" y2="170" stroke="#10B981" strokeWidth="6" />
+                        <line x1="274" y1="136" x2="376" y2="74" stroke="#10B981" strokeWidth="6" />
+                        <line x1="424" y1="74" x2="526" y2="136" stroke="#10B981" strokeWidth="6" />
+
+                        {/* Node 4 on the path */}
+                        <circle cx="150" cy="250" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="150" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">4</text>
+
+                        {/* Node 2 on the path */}
+                        <circle cx="250" cy="150" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="250" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">2</text>
+
+                        {/* Node 1 on the path */}
+                        <circle cx="400" cy="60" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="400" y="67" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">1</text>
+
+                        {/* Node 3 on the path */}
+                        <circle cx="550" cy="150" r="28" fill="#10B981" stroke="white" strokeWidth="3" />
+                        <text x="550" y="157" textAnchor="middle" fill="white" fontWeight="600" fontSize="16">3</text>
+
+                        {/* Node 5 faded (not on longest path) */}
+                        <circle cx="350" cy="250" r="28" fill="#9CA3AF" stroke="white" strokeWidth="2" opacity="0.5" />
+                        <text x="350" y="257" textAnchor="middle" fill="white" fontWeight="600" fontSize="16" opacity="0.5">5</text>
+
+                        {/* Result banner */}
+                        <rect x="220" y="325" width="360" height="45" rx="10" fill="#10B981" fillOpacity="0.15" stroke="#10B981" strokeWidth="2" />
+                        <text x="400" y="355" textAnchor="middle" fill="#10B981" fontSize="18" fontWeight="700">Diameter = 3 (path: 4 → 2 → 1 → 3)</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            { title: "Not Through Root", text: "The longest path doesn't always pass through the root." },
+            { title: "Edges vs Nodes", text: "Diameter is edge count (Nodes - 1)." }
+        ],
+        mistakes: [
+            { title: "Confusing Height vs Depth", text: "Height is bottom-up, Depth is top-down." }
+        ],
+        related: [
+            { id: 104, title: "Maximum Depth of Binary Tree", difficulty: "Easy", tags: ["Tree", "DFS"] },
+            { id: 110, title: "Balanced Binary Tree", difficulty: "Easy", tags: ["Tree", "DFS"] },
+            { id: 124, title: "Binary Tree Maximum Path Sum", difficulty: "Hard", tags: ["Tree", "DFS", "DP"] }
+        ]
   }
 
 };
