@@ -1644,5 +1644,1343 @@ export const problemsData = {
             { title: "Empty Root", text: "Handle null root first." }
         ],
         related: []
+    },
+  "3sum": {
+    id: 15,
+    title: "3Sum",
+    difficulty: "Medium",
+    acceptance: "33.4%",
+    submissions: "8.4M",
+    tags: ["Array", "Two Pointers", "Sorting"],
+    description: "Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i ≠ j, i ≠ k, j ≠ k, and nums[i] + nums[j] + nums[k] == 0.",
+    intuition: [
+      {
+        title: "Sort the Array",
+        text: "Sorting allows us to use the two-pointer technique and easily skip duplicates."
+      },
+      {
+        title: "Fix One Element",
+        text: "Fix nums[i] and search for two numbers that sum to -nums[i]."
+      },
+      {
+        title: "Two Pointers",
+        text: "Use left and right pointers to scan the remaining array efficiently."
+      }
+    ],
+    codeSnippets: {
+      python: `class Solution:
+    def threeSum(self, nums):
+        nums.sort()
+        res = []
+        n = len(nums)
+
+        for i in range(n):
+            if i > 0 and nums[i] == nums[i - 1]:
+                continue
+
+            l, r = i + 1, n - 1
+            while l < r:
+                s = nums[i] + nums[l] + nums[r]
+                if s < 0:
+                    l += 1
+                elif s > 0:
+                    r -= 1
+                else:
+                    res.append([nums[i], nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while l < r and nums[l] == nums[l - 1]:
+                        l += 1
+        return res`,
+      java: `class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int l = i + 1, r = nums.length - 1;
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum < 0) l++;
+                else if (sum > 0) r--;
+                else {
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    l++;
+                    r--;
+                    while (l < r && nums[l] == nums[l - 1]) l++;
+                }
+            }
+        }
+        return res;
     }
+}`,
+      c: `// C implementation requires manual memory management.
+// Typically implemented using sorting + two pointers with dynamic arrays.`,
+      cpp: `class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int l = i + 1, r = nums.size() - 1;
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum < 0) l++;
+                else if (sum > 0) r--;
+                else {
+                    res.push_back({nums[i], nums[l], nums[r]});
+                    l++;
+                    r--;
+                    while (l < r && nums[l] == nums[l - 1]) l++;
+                }
+            }
+        }
+        return res;
+    }
+};`
+    },
+    complexity: {
+      time: { value: "O(N²)", explanation: "Fix one element and scan remaining array with two pointers." },
+      space: { value: "O(1)", explanation: "Ignoring output storage." }
+    },
+    visualSteps: [
+      {
+        desc: "Step 1: Sort the array and fix the first element.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Sorted Array: [-4, -1, -1, 0, 1, 2]
+            </text>
+
+            {[-4,-1,-1,0,1,2].map((v, i) => (
+              <g key={i}>
+                <rect x={150 + i*90} y="70" width="70" height="50" rx="8"
+                  fill={i === 0 ? "#3B82F6" : "#E5E7EB"} />
+                <text x={185 + i*90} y="102" textAnchor="middle"
+                  fill={i === 0 ? "white" : "#374151"} fontWeight="600">
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="185" y="145" textAnchor="middle" fill="#2563EB">i</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 2: Use two pointers to search for remaining pair.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Target = -nums[i]
+            </text>
+
+            {[-4,-1,-1,0,1,2].map((v, i) => (
+              <g key={i}>
+                <rect x={150 + i*90} y="70" width="70" height="50" rx="8"
+                  fill={i === 1 ? "#10B981" : i === 5 ? "#F59E0B" : "#E5E7EB"} />
+                <text x={185 + i*90} y="102" textAnchor="middle"
+                  fill={i === 1 || i === 5 ? "white" : "#374151"} fontWeight="600">
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="185" y="145" textAnchor="middle" fill="#2563EB">i</text>
+            <text x="275" y="145" textAnchor="middle" fill="#059669">L</text>
+            <text x="595" y="145" textAnchor="middle" fill="#D97706">R</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 3: Found a valid triplet. Move pointers and skip duplicates.",
+        svg: (
+          <g>
+            <rect x="250" y="180" width="300" height="60" rx="10"
+              fill="#ECFDF5" stroke="#10B981" strokeWidth="2" />
+            <text x="400" y="215" textAnchor="middle"
+              fill="#065F46" fontSize="16" fontFamily="monospace" fontWeight="600">
+              Triplet Found: [-1, -1, 2]
+            </text>
+          </g>
+        )
+      }
+    ],
+    tips: [
+      { title: "Skip Duplicates", text: "Avoid repeating the same triplet." },
+      { title: "Sorted Array", text: "Two-pointer only works on sorted data." }
+    ],
+    mistakes: [
+      { title: "Missing Duplicates", text: "Forgetting to skip duplicates causes repeated answers." },
+      { title: "Wrong Pointer Move", text: "Move left/right based on sum comparison." }
+    ],
+    related: [
+  {
+    id: 16,
+    title: "3Sum Closest",
+    difficulty: "Medium",
+    tags: ["Array", "Two Pointers", "Sorting"],
+    link: "/problem/3sum-closest"
+  },
+  {
+    id: 18,
+    title: "4Sum",
+    difficulty: "Medium",
+    tags: ["Array", "Two Pointers", "Sorting"],
+    link: "/problem/4sum"
+  },
+  {
+    id: 167,
+    title: "Two Sum II - Input Array Is Sorted",
+    difficulty: "Medium",
+    tags: ["Array", "Two Pointers"],
+    link: "/problem/two-sum-ii-input-array-is-sorted"
+  }
+]
+},
+
+  "remove-duplicates-from-sorted-array": {
+    id: 26,
+    title: "Remove Duplicates from Sorted Array",
+    difficulty: "Easy",
+    acceptance: "54.9%",
+    submissions: "6.7M",
+    tags: ["Array", "Two Pointers"],
+    description: "<p>Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears only once. The relative order of the elements should be kept the same.</p>",
+    intuition: [
+      {
+        title: "Sorted Property",
+        text: "Because the array is sorted, duplicates always appear next to each other."
+      },
+      {
+        title: "Two Pointers",
+        text: "Use one pointer to scan the array and another to place the next unique value."
+      },
+      {
+        title: "In-Place Update",
+        text: "Overwrite duplicate positions with the next unique number."
+      }
+    ],
+    codeSnippets: {
+      python: `class Solution:
+    def removeDuplicates(self, nums):
+        if not nums:
+            return 0
+
+        k = 1
+        for i in range(1, len(nums)):
+            if nums[i] != nums[i - 1]:
+                nums[k] = nums[i]
+                k += 1
+        return k`,
+      java: `class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) return 0;
+
+        int k = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        return k;
+    }
+}`,
+      c: `int removeDuplicates(int* nums, int numsSize) {
+    if (numsSize == 0) return 0;
+
+    int k = 1;
+    for (int i = 1; i < numsSize; i++) {
+        if (nums[i] != nums[i - 1]) {
+            nums[k] = nums[i];
+            k++;
+        }
+    }
+    return k;
+}`,
+      cpp: `class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if (nums.empty()) return 0;
+
+        int k = 1;
+        for (int i = 1; i < nums.size(); i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[k++] = nums[i];
+            }
+        }
+        return k;
+    }
+};`
+    },
+    complexity: {
+      time: { value: "O(N)", explanation: "Each element is visited exactly once." },
+      space: { value: "O(1)", explanation: "In-place modification without extra memory." }
+    },
+    visualSteps: [
+      {
+        desc: "Step 1: Initialize two pointers. k tracks the position of the next unique element.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Initial Array: [1, 1, 2, 2, 3]
+            </text>
+
+            {[1,1,2,2,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={180 + i * 80}
+                  y="70"
+                  width="60"
+                  height="50"
+                  rx="8"
+                  fill={i === 0 ? "#3B82F6" : "#E5E7EB"}
+                />
+                <text
+                  x={210 + i * 80}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i === 0 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="210" y="145" textAnchor="middle" fill="#2563EB">k / i</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 2: Skip duplicate elements while scanning.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Duplicate Found → Skip
+            </text>
+
+            {[1,1,2,2,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={180 + i * 80}
+                  y="70"
+                  width="60"
+                  height="50"
+                  rx="8"
+                  fill={i === 1 ? "#F87171" : "#E5E7EB"}
+                />
+                <text
+                  x={210 + i * 80}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i === 1 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="290" y="145" textAnchor="middle" fill="#DC2626">duplicate</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 3: Place next unique element and advance k.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Write Unique Value at Index k
+            </text>
+
+            {[1,2,2,2,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={180 + i * 80}
+                  y="70"
+                  width="60"
+                  height="50"
+                  rx="8"
+                  fill={i === 1 ? "#10B981" : "#E5E7EB"}
+                />
+                <text
+                  x={210 + i * 80}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i === 1 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="290" y="145" textAnchor="middle" fill="#059669">k →</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 4: Final result contains only unique elements up to index k.",
+        svg: (
+          <g>
+            <rect
+              x="250"
+              y="190"
+              width="300"
+              height="60"
+              rx="10"
+              fill="#ECFDF5"
+              stroke="#10B981"
+              strokeWidth="2"
+            />
+            <text
+              x="400"
+              y="225"
+              textAnchor="middle"
+              fill="#065F46"
+              fontSize="16"
+              fontFamily="monospace"
+              fontWeight="600"
+            >
+              Result: [1, 2, 3], k = 3
+            </text>
+          </g>
+        )
+      }
+    ],
+    tips: [
+      {
+        title: "Overwrite Duplicates",
+        text: "You don't need to delete elements—just overwrite them."
+      },
+      {
+        title: "Pointer Meaning",
+        text: "k always points to the next free position for a unique number."
+      }
+    ],
+    mistakes: [
+      {
+        title: "Using Extra Space",
+        text: "This problem must be solved in-place."
+      },
+      {
+        title: "Incorrect Return",
+        text: "Return k, not the modified array."
+      }
+    ],
+    related: [
+      {
+        id: 80,
+        title: "Remove Duplicates from Sorted Array II",
+        difficulty: "Medium",
+        tags: ["Array", "Two Pointers"],
+        link: "/problem/remove-duplicates-from-sorted-array-ii"
+      },
+      {
+        id: 283,
+        title: "Move Zeroes",
+        difficulty: "Easy",
+        tags: ["Array", "Two Pointers"],
+        link: "/problem/move-zeroes"
+      }
+    ]
+  },
+  "minimum-size-subarray-sum": {
+    id: 209,
+    title: "Minimum Size Subarray Sum",
+    difficulty: "Medium",
+    acceptance: "44.5%",
+    submissions: "2.9M",
+    tags: ["Array", "Sliding Window", "Two Pointers"],
+    description: "<p>Given an array of positive integers nums and a positive integer target, return the minimal length of a contiguous subarray of which the sum is greater than or equal to target. If there is no such subarray, return 0.</p>",
+    intuition: [
+      {
+        title: "Positive Numbers",
+        text: "Because all numbers are positive, expanding the window increases the sum and shrinking decreases it."
+      },
+      {
+        title: "Sliding Window",
+        text: "Use two pointers to maintain a window whose sum is tracked dynamically."
+      },
+      {
+        title: "Greedy Shrinking",
+        text: "Once the sum reaches the target, shrink from the left to minimize length."
+      }
+    ],
+    codeSnippets: {
+      python: `class Solution:
+    def minSubArrayLen(self, target, nums):
+        left = 0
+        curr_sum = 0
+        res = float('inf')
+
+        for right in range(len(nums)):
+            curr_sum += nums[right]
+
+            while curr_sum >= target:
+                res = min(res, right - left + 1)
+                curr_sum -= nums[left]
+                left += 1
+
+        return 0 if res == float('inf') else res`,
+      java: `class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0, sum = 0;
+        int res = Integer.MAX_VALUE;
+
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+
+            while (sum >= target) {
+                res = Math.min(res, right - left + 1);
+                sum -= nums[left];
+                left++;
+            }
+        }
+        return res == Integer.MAX_VALUE ? 0 : res;
+    }
+}`,
+      c: `int minSubArrayLen(int target, int* nums, int numsSize) {
+    int left = 0, sum = 0;
+    int res = numsSize + 1;
+
+    for (int right = 0; right < numsSize; right++) {
+        sum += nums[right];
+        while (sum >= target) {
+            if (right - left + 1 < res)
+                res = right - left + 1;
+            sum -= nums[left];
+            left++;
+        }
+    }
+    return res == numsSize + 1 ? 0 : res;
+}`,
+      cpp: `class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int left = 0, sum = 0;
+        int res = INT_MAX;
+
+        for (int right = 0; right < nums.size(); right++) {
+            sum += nums[right];
+            while (sum >= target) {
+                res = min(res, right - left + 1);
+                sum -= nums[left++];
+            }
+        }
+        return res == INT_MAX ? 0 : res;
+    }
+};`
+    },
+    complexity: {
+      time: {
+        value: "O(N)",
+        explanation: "Each element is added and removed from the window at most once."
+      },
+      space: {
+        value: "O(1)",
+        explanation: "Only constant extra space is used."
+      }
+    },
+    visualSteps: [
+      {
+        desc: "Step 1: Expand the window by moving the right pointer and adding elements to the sum.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              nums = [2, 3, 1, 2, 4, 3], target = 7
+            </text>
+
+            {[2,3,1,2,4,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={150 + i * 90}
+                  y="70"
+                  width="70"
+                  height="50"
+                  rx="8"
+                  fill={i <= 2 ? "#3B82F6" : "#E5E7EB"}
+                />
+                <text
+                  x={185 + i * 90}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i <= 2 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="275" y="145" textAnchor="middle" fill="#2563EB">window sum &lt; target</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 2: Window sum reaches or exceeds target.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Sum ≥ Target → Try to shrink window
+            </text>
+
+            {[2,3,1,2,4,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={150 + i * 90}
+                  y="70"
+                  width="70"
+                  height="50"
+                  rx="8"
+                  fill={i <= 3 ? "#10B981" : "#E5E7EB"}
+                />
+                <text
+                  x={185 + i * 90}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i <= 3 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="320" y="145" textAnchor="middle" fill="#059669">valid window</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 3: Shrink from the left to minimize subarray length.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              Shrinking Window from Left
+            </text>
+
+            {[2,3,1,2,4,3].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={150 + i * 90}
+                  y="70"
+                  width="70"
+                  height="50"
+                  rx="8"
+                  fill={i >= 1 && i <= 3 ? "#F59E0B" : "#E5E7EB"}
+                />
+                <text
+                  x={185 + i * 90}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i >= 1 && i <= 3 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+
+            <text x="320" y="145" textAnchor="middle" fill="#D97706">smaller window</text>
+          </g>
+        )
+      },
+      {
+        desc: "Step 4: Final minimal subarray length found.",
+        svg: (
+          <g>
+            <rect
+              x="230"
+              y="190"
+              width="340"
+              height="60"
+              rx="10"
+              fill="#ECFDF5"
+              stroke="#10B981"
+              strokeWidth="2"
+            />
+            <text
+              x="400"
+              y="225"
+              textAnchor="middle"
+              fill="#065F46"
+              fontSize="16"
+              fontFamily="monospace"
+              fontWeight="600"
+            >
+              Result: length = 2 (subarray [4, 3])
+            </text>
+          </g>
+        )
+      }
+    ],
+    tips: [
+      {
+        title: "Shrink Early",
+        text: "Always try to shrink once the sum is valid."
+      },
+      {
+        title: "Positive Constraint",
+        text: "Sliding window works only because all numbers are positive."
+      }
+    ],
+    mistakes: [
+      {
+        title: "Resetting Window",
+        text: "Do not reset the window when sum exceeds target—shrink instead."
+      },
+      {
+        title: "Returning Wrong Value",
+        text: "Return 0 if no valid subarray exists."
+      }
+    ],
+    related: [
+      {
+        id: 713,
+        title: "Subarray Product Less Than K",
+        difficulty: "Medium",
+        tags: ["Array", "Sliding Window"],
+        link: "/problem/subarray-product-less-than-k"
+      },
+      {
+        id: 904,
+        title: "Fruit Into Baskets",
+        difficulty: "Medium",
+        tags: ["Array", "Sliding Window"],
+        link: "/problem/fruit-into-baskets"
+      },
+      {
+        id: 76,
+        title: "Minimum Window Substring",
+        difficulty: "Hard",
+        tags: ["Sliding Window", "Hash Table", "String"],
+        link: "/problem/minimum-window-substring"
+      }
+    ]
+  },
+  "minimum-window-substring": {
+    id: 76,
+    title: "Minimum Window Substring",
+    difficulty: "Hard",
+    acceptance: "42.3%",
+    submissions: "3.5M",
+    tags: ["String", "Sliding Window", "Hash Table"],
+    description: "<p>Given two strings <code>s</code> and <code>t</code>, return the minimum window substring of <code>s</code> such that every character in <code>t</code> (including duplicates) is included in the window. If there is no such substring, return an empty string.</p>",
+    intuition: [
+      {
+        title: "Frequency Matching",
+        text: "The window must contain all required characters with correct counts."
+      },
+      {
+        title: "Expand Then Shrink",
+        text: "Expand the window until valid, then shrink from the left to minimize length."
+      },
+      {
+        title: "Validity Tracking",
+        text: "Track how many required characters are satisfied at any moment."
+      }
+    ],
+    codeSnippets: {
+      python: `class Solution:
+    def minWindow(self, s: str, t: str) -> str:
+        from collections import Counter
+
+        if not s or not t:
+            return ""
+
+        need = Counter(t)
+        window = {}
+        have = 0
+        need_count = len(need)
+
+        res = [-1, -1]
+        res_len = float("inf")
+        left = 0
+
+        for right in range(len(s)):
+            c = s[right]
+            window[c] = window.get(c, 0) + 1
+
+            if c in need and window[c] == need[c]:
+                have += 1
+
+            while have == need_count:
+                if (right - left + 1) < res_len:
+                    res = [left, right]
+                    res_len = right - left + 1
+
+                window[s[left]] -= 1
+                if s[left] in need and window[s[left]] < need[s[left]]:
+                    have -= 1
+                left += 1
+
+        l, r = res
+        return "" if res_len == float("inf") else s[l:r+1]`,
+      java: `class Solution {
+    public String minWindow(String s, String t) {
+        if (s.length() == 0 || t.length() == 0) return "";
+
+        Map<Character, Integer> need = new HashMap<>();
+        for (char c : t.toCharArray())
+            need.put(c, need.getOrDefault(c, 0) + 1);
+
+        Map<Character, Integer> window = new HashMap<>();
+        int have = 0, needCount = need.size();
+        int left = 0;
+        int minLen = Integer.MAX_VALUE;
+        int start = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            char c = s.charAt(right);
+            window.put(c, window.getOrDefault(c, 0) + 1);
+
+            if (need.containsKey(c) && window.get(c).intValue() == need.get(c).intValue())
+                have++;
+
+            while (have == needCount) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+
+                char leftChar = s.charAt(left);
+                window.put(leftChar, window.get(leftChar) - 1);
+                if (need.containsKey(leftChar) && window.get(leftChar) < need.get(leftChar))
+                    have--;
+                left++;
+            }
+        }
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+    }
+}`,
+      c: `char* minWindow(char* s, char* t) {
+    int need[128] = {0}, window[128] = {0};
+    int required = 0;
+
+    for (int i = 0; t[i]; i++) {
+        if (need[t[i]]++ == 0)
+            required++;
+    }
+
+    int left = 0, right = 0, formed = 0;
+    int minLen = INT_MAX, start = 0;
+
+    while (s[right]) {
+        char c = s[right];
+        window[c]++;
+        if (need[c] > 0 && window[c] == need[c])
+            formed++;
+
+        while (formed == required) {
+            if (right - left + 1 < minLen) {
+                minLen = right - left + 1;
+                start = left;
+            }
+            window[s[left]]--;
+            if (need[s[left]] > 0 && window[s[left]] < need[s[left]])
+                formed--;
+            left++;
+        }
+        right++;
+    }
+
+    if (minLen == INT_MAX) return "";
+    char* res = (char*)malloc(minLen + 1);
+    strncpy(res, s + start, minLen);
+    res[minLen] = '\\0';
+    return res;
+}`,
+      cpp: `class Solution {
+public:
+    string minWindow(string s, string t) {
+        unordered_map<char, int> need, window;
+        for (char c : t) need[c]++;
+
+        int have = 0, needCount = need.size();
+        int left = 0, minLen = INT_MAX, start = 0;
+
+        for (int right = 0; right < s.size(); right++) {
+            char c = s[right];
+            window[c]++;
+
+            if (need.count(c) && window[c] == need[c])
+                have++;
+
+            while (have == needCount) {
+                if (right - left + 1 < minLen) {
+                    minLen = right - left + 1;
+                    start = left;
+                }
+                window[s[left]]--;
+                if (need.count(s[left]) && window[s[left]] < need[s[left]])
+                    have--;
+                left++;
+            }
+        }
+        return minLen == INT_MAX ? "" : s.substr(start, minLen);
+    }
+};`
+    },
+    complexity: {
+      time: {
+        value: "O(|S| + |T|)",
+        explanation: "Each character is processed at most twice."
+      },
+      space: {
+        value: "O(1)",
+        explanation: "Character set size is bounded."
+      }
+    },
+    visualSteps: [
+      {
+        desc: "Step 1: Expand window until all required characters are included.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              s = ADOBECODEBANC, t = ABC
+            </text>
+
+            {"ADOBECODEBANC".split("").map((ch, i) => (
+              <g key={i}>
+                <rect
+                  x={80 + i * 55}
+                  y="70"
+                  width="45"
+                  height="50"
+                  rx="8"
+                  fill={i <= 5 ? "#3B82F6" : "#E5E7EB"}
+                />
+                <text
+                  x={102 + i * 55}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i <= 5 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {ch}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 2: Window becomes valid when all characters match frequency requirements.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#059669" fontSize="14">
+              Valid Window Found
+            </text>
+
+            {"ADOBECODEBANC".split("").map((ch, i) => (
+              <g key={i}>
+                <rect
+                  x={80 + i * 55}
+                  y="70"
+                  width="45"
+                  height="50"
+                  rx="8"
+                  fill={i >= 5 && i <= 10 ? "#10B981" : "#E5E7EB"}
+                />
+                <text
+                  x={102 + i * 55}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i >= 5 && i <= 10 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {ch}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 3: Shrink window from the left to get minimum size.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#D97706" fontSize="14">
+              Shrinking to Minimum
+            </text>
+
+            {"ADOBECODEBANC".split("").map((ch, i) => (
+              <g key={i}>
+                <rect
+                  x={80 + i * 55}
+                  y="70"
+                  width="45"
+                  height="50"
+                  rx="8"
+                  fill={i >= 9 && i <= 12 ? "#F59E0B" : "#E5E7EB"}
+                />
+                <text
+                  x={102 + i * 55}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i >= 9 && i <= 12 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {ch}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 4: Final minimum window substring.",
+        svg: (
+          <g>
+            <rect
+              x="260"
+              y="190"
+              width="280"
+              height="60"
+              rx="10"
+              fill="#ECFDF5"
+              stroke="#10B981"
+              strokeWidth="2"
+            />
+            <text
+              x="400"
+              y="225"
+              textAnchor="middle"
+              fill="#065F46"
+              fontSize="16"
+              fontFamily="monospace"
+              fontWeight="600"
+            >
+              Result: "BANC"
+            </text>
+          </g>
+        )
+      }
+    ],
+    tips: [
+      {
+        title: "Track Exact Counts",
+        text: "A window is valid only when character frequencies match."
+      },
+      {
+        title: "Shrink Aggressively",
+        text: "Always shrink when the window is valid."
+      }
+    ],
+    mistakes: [
+      {
+        title: "Ignoring Duplicates",
+        text: "Characters in t may repeat—track counts carefully."
+      },
+      {
+        title: "Wrong Valid Condition",
+        text: "Checking set inclusion instead of frequency match."
+      }
+    ],
+    related: [
+      {
+        id: 209,
+        title: "Minimum Size Subarray Sum",
+        difficulty: "Medium",
+        tags: ["Array", "Sliding Window"],
+        link: "/problem/minimum-size-subarray-sum"
+      },
+      {
+        id: 567,
+        title: "Permutation in String",
+        difficulty: "Medium",
+        tags: ["Sliding Window", "String"],
+        link: "/problem/permutation-in-string"
+      },
+      {
+        id: 438,
+        title: "Find All Anagrams in a String",
+        difficulty: "Medium",
+        tags: ["Sliding Window", "String"],
+        link: "/problem/find-all-anagrams-in-a-string"
+      }
+    ]
+  },
+  "max-consecutive-ones-iii": {
+    id: 1004,
+    title: "Max Consecutive Ones III",
+    difficulty: "Medium",
+    acceptance: "63.9%",
+    submissions: "1.8M",
+    tags: ["Array", "Sliding Window", "Two Pointers"],
+    description: "<p>Given a binary array <code>nums</code> and an integer <code>k</code>, return the maximum number of consecutive <code>1</code>s in the array if you can flip at most <code>k</code> zeros.</p>",
+    intuition: [
+      {
+        title: "At Most K Zeros",
+        text: "The window is valid as long as it contains at most k zeros."
+      },
+      {
+        title: "Expand Right Pointer",
+        text: "Grow the window to include more elements and count zeros."
+      },
+      {
+        title: "Shrink When Invalid",
+        text: "If zero count exceeds k, move the left pointer until valid again."
+      }
+    ],
+    codeSnippets: {
+      python: `class Solution:
+    def longestOnes(self, nums: List[int], k: int) -> int:
+        left = 0
+        zeros = 0
+        res = 0
+
+        for right in range(len(nums)):
+            if nums[right] == 0:
+                zeros += 1
+
+            while zeros > k:
+                if nums[left] == 0:
+                    zeros -= 1
+                left += 1
+
+            res = max(res, right - left + 1)
+
+        return res`,
+      java: `class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int left = 0, zeros = 0, maxLen = 0;
+
+        for (int right = 0; right < nums.length; right++) {
+            if (nums[right] == 0) zeros++;
+
+            while (zeros > k) {
+                if (nums[left] == 0) zeros--;
+                left++;
+            }
+
+            maxLen = Math.max(maxLen, right - left + 1);
+        }
+        return maxLen;
+    }
+}`,
+      c: `int longestOnes(int* nums, int numsSize, int k) {
+    int left = 0, zeros = 0, maxLen = 0;
+
+    for (int right = 0; right < numsSize; right++) {
+        if (nums[right] == 0)
+            zeros++;
+
+        while (zeros > k) {
+            if (nums[left] == 0)
+                zeros--;
+            left++;
+        }
+
+        if (right - left + 1 > maxLen)
+            maxLen = right - left + 1;
+    }
+    return maxLen;
+}`,
+      cpp: `class Solution {
+public:
+    int longestOnes(vector<int>& nums, int k) {
+        int left = 0, zeros = 0, maxLen = 0;
+
+        for (int right = 0; right < nums.size(); right++) {
+            if (nums[right] == 0) zeros++;
+
+            while (zeros > k) {
+                if (nums[left] == 0) zeros--;
+                left++;
+            }
+            maxLen = max(maxLen, right - left + 1);
+        }
+        return maxLen;
+    }
+};`
+    },
+    complexity: {
+      time: {
+        value: "O(N)",
+        explanation: "Each index is visited at most twice by left and right pointers."
+      },
+      space: {
+        value: "O(1)",
+        explanation: "Uses only constant extra space."
+      }
+    },
+    visualSteps: [
+      {
+        desc: "Step 1: Expand window while counting zeros.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#6B7280" fontSize="14">
+              nums = [1,1,1,0,0,0,1,1,1,1,0], k = 2
+            </text>
+
+            {[1,1,1,0,0,0,1,1,1,1,0].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={70 + i * 60}
+                  y="70"
+                  width="50"
+                  height="50"
+                  rx="8"
+                  fill={i <= 5 ? "#3B82F6" : "#E5E7EB"}
+                />
+                <text
+                  x={95 + i * 60}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i <= 5 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 2: Window becomes invalid when zeros exceed k.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#DC2626" fontSize="14">
+              Zeros &gt; k → shrink from left
+            </text>
+
+            {[1,1,1,0,0,0,1,1,1,1,0].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={70 + i * 60}
+                  y="70"
+                  width="50"
+                  height="50"
+                  rx="8"
+                  fill={i >= 2 && i <= 6 ? "#EF4444" : "#E5E7EB"}
+                />
+                <text
+                  x={95 + i * 60}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i >= 2 && i <= 6 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 3: Shrink left pointer until window is valid again.",
+        svg: (
+          <g>
+            <text x="400" y="30" textAnchor="middle" fill="#D97706" fontSize="14">
+              Removing excess zeros
+            </text>
+
+            {[1,1,1,0,0,0,1,1,1,1,0].map((v, i) => (
+              <g key={i}>
+                <rect
+                  x={70 + i * 60}
+                  y="70"
+                  width="50"
+                  height="50"
+                  rx="8"
+                  fill={i >= 4 && i <= 9 ? "#F59E0B" : "#E5E7EB"}
+                />
+                <text
+                  x={95 + i * 60}
+                  y="102"
+                  textAnchor="middle"
+                  fill={i >= 4 && i <= 9 ? "white" : "#374151"}
+                  fontWeight="600"
+                >
+                  {v}
+                </text>
+              </g>
+            ))}
+          </g>
+        )
+      },
+      {
+        desc: "Step 4: Track maximum valid window length.",
+        svg: (
+          <g>
+            <rect
+              x="250"
+              y="190"
+              width="300"
+              height="60"
+              rx="10"
+              fill="#ECFDF5"
+              stroke="#10B981"
+              strokeWidth="2"
+            />
+            <text
+              x="400"
+              y="225"
+              textAnchor="middle"
+              fill="#065F46"
+              fontSize="16"
+              fontFamily="monospace"
+              fontWeight="600"
+            >
+              Result: 6
+            </text>
+          </g>
+        )
+      }
+    ],
+    tips: [
+      {
+        title: "Don’t Flip Explicitly",
+        text: "Just count zeros; flipping is conceptual."
+      },
+      {
+        title: "Classic Sliding Window",
+        text: "Pattern applies to many at-most-k problems."
+      }
+    ],
+    mistakes: [
+      {
+        title: "Resetting Window",
+        text: "Never reset; always shrink gradually."
+      },
+      {
+        title: "Wrong Zero Count",
+        text: "Forgetting to decrement zeros when moving left."
+      }
+    ],
+    related: [
+      {
+        id: 485,
+        title: "Max Consecutive Ones",
+        difficulty: "Easy",
+        tags: ["Array"],
+        link: "/problem/max-consecutive-ones"
+      },
+      {
+        id: 487,
+        title: "Max Consecutive Ones II",
+        difficulty: "Medium",
+        tags: ["Array", "Sliding Window"],
+        link: "/problem/max-consecutive-ones-ii"
+      },
+      {
+        id: 209,
+        title: "Minimum Size Subarray Sum",
+        difficulty: "Medium",
+        tags: ["Array", "Sliding Window"],
+        link: "/problem/minimum-size-subarray-sum"
+      }
+    ]
+  }
+
 };

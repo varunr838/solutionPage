@@ -12,6 +12,9 @@ export default function CodeDisplay({ snippets }) {
         <select value={lang} onChange={(e) => setLang(e.target.value)} className="language-selector">
           <option value="java">Java</option>
           <option value="python">Python</option>
+          <option value="cpp">C++</option>
+          <option value="c">C</option>
+          
         </select>
       </div>
       <div className="code-editor">

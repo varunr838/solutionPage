@@ -107,7 +107,8 @@ export const RelatedProblems = ({ problems = [] }) => (
     <div className="section-content">
       <div className="related-problems-grid">
         {problems.map((p, i) => (
-          <a key={i} href={`/problem/${p.id}`} className="related-problem-card">
+          <a key={i} href={p.link} className="related-problem-card">
+
             <div className="related-problem-header">
               <div className="related-problem-number">Problem {p.id}</div>
               <div className={`difficulty-badge difficulty-${p.difficulty?.toLowerCase()}`}>
