@@ -3555,6 +3555,285 @@ public:
             { id: 110, title: "Balanced Binary Tree", difficulty: "Easy", tags: ["Tree", "DFS"] },
             { id: 124, title: "Binary Tree Maximum Path Sum", difficulty: "Hard", tags: ["Tree", "DFS", "DP"] }
         ]
+
+      "largest-rectangle-in-histogram": {
+        id: 84,
+        title: "Largest Rectangle in Histogram",
+        difficulty: "Hard",
+        acceptance: "44.5%",
+        submissions: "2.1M",
+        tags: ["Array", "Stack", "Monotonic Stack"],
+        description: "<p>Given an array of integers <code>heights</code> representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.</p>",
+        intuition: [
+            {
+                title: "Monotonic Stack",
+                text: "Maintain a stack of indices where the heights are strictly increasing."
+            },
+            {
+                title: "Area Calculation",
+                text: "When a shorter bar is encountered, we know the 'right boundary' for all taller bars in the stack. Popping them allows us to calculate the area they can form."
+            },
+            {
+                title: "Sentinel Value",
+                text: "Adding a 0 at the end of the heights array ensures that all remaining bars in the stack are processed."
+            }
+        ],
+        codeSnippets: {
+            python: `class Solution:
+    def largestRectangleArea(self, heights: List[int]) -> int:
+        n = len(heights)
+        stack = []
+        max_area = 0
+        
+        for i in range(n + 1):
+            curr_h = heights[i] if i < n else 0
+            while stack and heights[stack[-1]] >= curr_h:
+                h = heights[stack.pop()]
+                w = i if not stack else i - stack[-1] - 1
+                max_area = max(max_area, h * w)
+            stack.append(i)
+        return max_area`,
+            java: `class Solution {
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> stack = new Stack<>();
+        int maxArea = 0;
+        int n = heights.length;
+        for (int i = 0; i <= n; i++) {
+            int h = (i == n) ? 0 : heights[i];
+            while (!stack.isEmpty() && heights[stack.peek()] >= h) {
+                int height = heights[stack.pop()];
+                int width = stack.isEmpty() ? i : i - stack.peek() - 1;
+                maxArea = Math.max(maxArea, height * width);
+            }
+            stack.push(i);
+        }
+        return maxArea;
+    }
+}`,
+            cpp: `class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> s;
+        int max_area = 0;
+        int n = heights.size();
+        for (int i = 0; i <= n; i++) {
+            int h = (i == n) ? 0 : heights[i];
+            while (!s.empty() && heights[s.top()] >= h) {
+                int height = heights[s.top()];
+                s.pop();
+                int width = s.empty() ? i : i - s.top() - 1;
+                max_area = max(max_area, height * width);
+            }
+            s.push(i);
+        }
+        return max_area;
+    }
+};`,
+            javascript: `/**
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(heights) {
+    let stack = [];
+    let maxArea = 0;
+    for (let i = 0; i <= heights.length; i++) {
+        let h = (i === heights.length) ? 0 : heights[i];
+        while (stack.length > 0 && heights[stack[stack.length - 1]] >= h) {
+            let height = heights[stack.pop()];
+            let width = stack.length === 0 ? i : i - stack[stack.length - 1] - 1;
+            maxArea = Math.max(maxArea, height * width);
+        }
+        stack.push(i);
+    }
+    return maxArea;
+};`
+        },
+        complexity: {
+            time: { value: "O(N)", explanation: "Each index is pushed onto and popped from the stack at most once." },
+            space: { value: "O(N)", explanation: "In the worst case (ascending heights), the stack will store all indices." }
+        },
+        visualSteps: [
+            {
+                desc: "Initial State: Heights [2, 1, 5, 6, 2, 3]. Stack empty.",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#3B82F6" fontSize="20" fontWeight="700">Initial State: Empty Stack</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="80" height="200" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Push 2. Stack: [0].",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#EF4444" fontSize="18" fontWeight="600">Push index 0 (height 2). Stack: [0]</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#FEE2E2" stroke="#EF4444" strokeWidth="2" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="80" height="200" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Encounter 1. Pop 2. Area = 2 * 1 = 2. Push 1. Stack: [1].",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#EF4444" fontSize="18" fontWeight="600">H[1] &lt; H[0] (1 &lt; 2). Pop 0, Area = 2 * 1 = 2. Stack: [1]</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#FEE2E2" stroke="#EF4444" strokeWidth="2" />
+                        <rect x="100" y="300" width="80" height="80" fill="rgba(239, 68, 68, 0.2)" stroke="#EF4444" strokeWidth="2" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="80" height="200" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Push 5 and 6. They are increasing. Stack: [1, 2, 3].",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#3B82F6" fontSize="18" fontWeight="600">Push index 2 (5) and 3 (6). Increasing. Stack: [1, 2, 3]</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="80" height="200" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Encounter 2. Pop 6. Area = 6 * 1 = 6.",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#EF4444" fontSize="18" fontWeight="600">H[4] &lt; H[3] (2 &lt; 6). Pop 3. Area = 6 * 1 = 6.</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="80" height="200" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="rgba(16, 185, 129, 0.4)" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Next Pop 5. Width is (4 - 1 - 1) = 2. Area = 5 * 2 = 10.",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#10B981" fontSize="18" fontWeight="600">H[4] &lt; H[2] (2 &lt; 5). Pop 2. Area = 5 * (4 - 1 - 1) = 10!</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="160" height="200" fill="rgba(16, 185, 129, 0.4)" stroke="#10B981" strokeWidth="3" />
+                        <text x="340" y="285" textAnchor="middle" fill="#065F46" fontWeight="700" fontSize="24">10</text>
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="none" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            },
+            {
+                desc: "Process remains. Final max area is 10.",
+                svg: (
+                    <g>
+                        <text x="400" y="50" textAnchor="middle" fill="#10B981" fontSize="20" fontWeight="700">Max Area Found: 10</text>
+                        <rect x="100" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="140" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="180" y="340" width="80" height="40" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="220" y="365" textAnchor="middle" fill="#374151" fontWeight="600">1</text>
+                        <rect x="260" y="180" width="160" height="200" fill="rgba(16, 185, 129, 0.4)" stroke="#10B981" strokeWidth="3" />
+                        <text x="300" y="285" textAnchor="middle" fill="#374151" fontWeight="600">5</text>
+                        <rect x="340" y="140" width="80" height="240" fill="none" stroke="#374151" strokeWidth="1" />
+                        <text x="380" y="265" textAnchor="middle" fill="#374151" fontWeight="600">6</text>
+                        <rect x="420" y="300" width="80" height="80" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="460" y="345" textAnchor="middle" fill="#374151" fontWeight="600">2</text>
+                        <rect x="500" y="260" width="80" height="120" fill="#E5E7EB" stroke="#374151" strokeWidth="1" />
+                        <text x="540" y="325" textAnchor="middle" fill="#374151" fontWeight="600">3</text>
+                    </g>
+                )
+            }
+        ],
+        tips: [
+            {
+                title: "Sentinel Value",
+                text: "Mention adding a 0-height bar at the end to simplify code and avoid a separate loop for remaining stack elements."
+            },
+            {
+                title: "Monotonic Stack",
+                text: "This pattern is useful for 'next smaller' or 'next larger' element problems."
+            },
+            {
+                title: "Divide and Conquer",
+                text: "While O(n log n) divide and conquer is possible, the monotonic stack is the optimal O(n) approach."
+            }
+        ],
+        mistakes: [
+            {
+                title: "Stack Content",
+                text: "Forgetting to store indices in the stack instead of heights. Indices are needed to calculate width."
+            },
+            {
+                title: "Width Calculation",
+                text: "Incorrect width when the stack becomes empty. The width should extend to the very beginning of the histogram."
+            }
+        ],
+        related: [
+            {
+                id: 85,
+                title: "Maximal Rectangle",
+                difficulty: "Hard",
+                tags: ["Array", "DP", "Stack"]
+            },
+            {
+                id: 42,
+                title: "Trapping Rain Water",
+                difficulty: "Hard",
+                tags: ["Stack", "Two Pointers"]
+            }
+        ]
+    
   }
 
 };
